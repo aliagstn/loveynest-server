@@ -14,7 +14,42 @@ module.exports = (sequelize, DataTypes) => {
   }
   UserQuestion.init(
     {
-      question: DataTypes.STRING,
+      question: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          notNull: {
+            msg: "Question is required"
+          },
+          notEmpty: {
+            msg: "Question is required"
+          }
+        }
+      },
+      optionA: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          notNull: {
+            msg: "Option A is required"
+          },
+          notEmpty: {
+            msg: "Option A is required"
+          }
+        }
+      },
+      optionB: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          notNull: {
+            msg: "Option B is required"
+          },
+          notEmpty: {
+            msg: "Option B is required"
+          }
+        }
+      },
       answer: DataTypes.STRING,
       responsePartner: DataTypes.STRING,
       valuePartner: DataTypes.BOOLEAN,

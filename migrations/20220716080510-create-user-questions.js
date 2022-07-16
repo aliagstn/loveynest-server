@@ -12,6 +12,14 @@ module.exports = {
                 allowNull: false,
                 type: Sequelize.STRING,
             },
+            optionA: {
+                allowNull: false,
+                type: Sequelize.STRING,
+            },
+            optionB: {
+                allowNull: false,
+                type: Sequelize.STRING,
+            },
             answer: {
                 allowNull: false,
                 type: Sequelize.STRING,

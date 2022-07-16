@@ -24,6 +24,8 @@
             "QuizId": 1,
             "question": "Apa makanan favourit aku kalau musim hujan",
             "answer": "Mie ayam bakso",
+            "optionA": "Soto Makassar",
+            "optionB": "Mie ayam bakso",
             "responsePartner": null,
             "valuePartner": null
         },
@@ -31,6 +33,8 @@
             "QuizId": 2,
             "question": "Apa film horor favourit aku",
             "answer": "Pocong Mumun",
+            "optionA": "Pocong Mumun",
+            "optionB": "Suster Ngesot",
             "responsePartner": null,
             "valuePartner": null
         }

@@ -20,6 +20,7 @@ class QuizController {
             res.status(200).json(quizes)
         } catch (error) {
             console.log(error);
+            next(error)
         }
     }
 
@@ -52,10 +53,11 @@ class QuizController {
             res.status(200).json(quiz)
         } catch (error) {
             console.log(error);
+            next(error)
         }
     }
 
-    // //* CREATE QUIZZ
+    //* CREATE QUIZZ
     static async createQuiz(req, res, next) {
 
         const t = await sequelize.transaction()
@@ -64,15 +66,23 @@ class QuizController {
             const AuthorId = 1 //? didapat dari authN
             const CoupleId = 1 //? didapat dari authN
             // const QuizCategoryId 
-            const { title, QuizCategoryId, question, answer } = req.body
+            const { title, QuizCategoryId, question, answer, optionA, optionB } = req.body
+            console.log(question, answer, optionA, optionB);
+
+            if (!answer || !question || !optionA || !optionB) {
+                throw { name: 'EMPTY_INPUT' }
+            }
 
             const inputQuiz = {
                 title, QuizCategoryId: +QuizCategoryId, AuthorId, CoupleId, status: '', totalPoint: 0
             }
-            console.log('batas 1');
+
             //* Create User Quiz
-            const [userQuiz, create] = await UserQuiz.findOrCreate({ where: inputQuiz })
-            console.log('batas 2');
+            const [userQuiz, create] = await UserQuiz.findOrCreate({
+                where: inputQuiz
+            })
+            // console.log(create);
+
             if (!create) {
                 throw { name: 'QUIZ_ALLREADY_EXIST' }
             } else {
@@ -81,11 +91,13 @@ class QuizController {
                 const inputQuestion = {
                     question,
                     answer,
-                    quizId: userQuiz.id,
+                    QuizId: userQuiz.id,
                     responsePartner: '',
-                    valuePartner: null
+                    valuePartner: null,
+                    optionA,
+                    optionB
                 }
-                console.log('batas 3');
+
                 const userQuestions = await UserQuestion.create(inputQuestion, { transaction: t })
 
                 await t.commit()
@@ -97,19 +109,68 @@ class QuizController {
         } catch (error) {
             console.log(error);
             t.rollback()
+            next(error)
         }
     }
 
-    // static async updateResponseQuiz(req, res, next) {
-    //     const t = await sequelize.transaction()
+    //* UPDATE RESPONSE PARTNER
+    static async updateResponseQuiz(req, res, next) {
+        const t = await sequelize.transaction()
 
-    //     try {
+        try {
+            const { responsePartner } = req.body
+            const { quizId, questionId } = req.params
 
-    //     } catch (error) {
-    //         console.log(error);
-    //         t.rollback()
-    //     }
-    // }
+            const currentQuestion = await UserQuestion.findByPk(Number(questionId))
+            const currentQuiz = await UserQuiz.findByPk(Number(quizId))
+
+            if (!currentQuestion || !currentQuiz) {
+                throw { name: 'QUIZ_NOT_FOUND' }
+            } else {
+                //* SET TOTAL POINT
+                let valuePartner = false
+                let status
+                let totalPoint = 0
+                if (responsePartner.toLowerCase() === currentQuestion.answer.toLowerCase()) {
+                    valuePartner = true
+                    status = "done"
+                    totalPoint = 100
+                }
+
+                const updateResponsePartner = await UserQuestion.update(
+                    {
+                        responsePartner,
+                        valuePartner,
+                    }, {
+                    where: {
+                        id: Number(questionId)
+                    }
+                }, { transaction: t })
+
+                const updateStatusQuiz = await UserQuiz.update(
+                    {
+                        status,
+                        totalPoint
+                    }, {
+                    where: {
+                        id: Number(quizId)
+                    }
+                }, { transaction: t })
+
+                await t.commit()
+
+                res.status(200).json({
+                    message: "Response has been updated"
+                })
+            }
+
+
+        } catch (error) {
+            console.log(error);
+            t.rollback()
+            next(error)
+        }
+    }
 }
 
 module.exports = QuizController
