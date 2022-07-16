@@ -9,13 +9,15 @@ module.exports = {
       question.updatedAt = new Date()
     });
 
-    await queryInterface.bulkInsert('userQuestions', questions, {});
+    await queryInterface.bulkInsert('UserQuestions', questions, {});
   },
 
   async down(queryInterface, Sequelize) {
 
-    await queryInterface.bulkDelete('userQuestions', null, {
-      restartIdentity: true
+    await queryInterface.bulkDelete('UserQuestions', null, {
+      truncate: true,
+      restartIdentity: true,
+      cascade: true
     });
   }
 };

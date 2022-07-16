@@ -16,7 +16,7 @@ module.exports = {
                 type: Sequelize.STRING,
             },
             totalPoint: {
-                type: Sequelize.STRING,
+                type: Sequelize.INTEGER,
             },
             AuthorId: {
                 type: Sequelize.INTEGER,

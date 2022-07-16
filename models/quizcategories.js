@@ -3,7 +3,7 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class QuizCategories extends Model {
+  class QuizCategory extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -11,10 +11,10 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      QuizCategories.hasMany(models.UserQuizzes, { foreignKey: "QuizCategoryId" })
+      QuizCategory.hasMany(models.UserQuiz, { foreignKey: "QuizCategoryId" })
     }
   }
-  QuizCategories.init({
+  QuizCategory.init({
     quizCategory: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -41,7 +41,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   }, {
     sequelize,
-    modelName: 'QuizCategories',
+    modelName: 'QuizCategory',
   });
-  return QuizCategories;
+  return QuizCategory;
 };

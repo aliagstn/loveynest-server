@@ -1,19 +1,15 @@
 "use strict";
-const { Model } = require("sequelize");
+const { Model, Sequelize } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
-    class UserQuizzes extends Model {
-        /**
-         * Helper method for defining associations.
-         * This method is not a part of Sequelize lifecycle.
-         * The `models/index` file will call this method automatically.
-         */
+    class UserQuiz extends Model {
+
         static associate(models) {
             // define association here
-            UserQuizzes.belongsTo(models.QuizCategories, { foreignKey: "QuizCategoryId" })
-            UserQuizzes.hasMany(models.userQuestions, { foreignKey: "QuizId" })
+            UserQuiz.belongsTo(models.QuizCategory, { foreignKey: "QuizCategoryId" })
+            UserQuiz.hasMany(models.UserQuestion, { foreignKey: "QuizId" })
         }
     }
-    UserQuizzes.init(
+    UserQuiz.init(
         {
             title: {
                 type: DataTypes.STRING,
@@ -28,15 +24,15 @@ module.exports = (sequelize, DataTypes) => {
                 }
             },
             status: DataTypes.STRING,
-            totalPoint: DataTypes.STRING,
+            totalPoint: DataTypes.INTEGER,
             AuthorId: DataTypes.INTEGER,
             CoupleId: DataTypes.INTEGER,
             QuizCategoryId: DataTypes.INTEGER,
         },
         {
             sequelize,
-            modelName: "userQuizzes",
+            modelName: "UserQuiz",
         }
     );
-    return UserQuizzes;
+    return UserQuiz;
 };

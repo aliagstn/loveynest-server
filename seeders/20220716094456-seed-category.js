@@ -16,7 +16,9 @@ module.exports = {
   async down(queryInterface, Sequelize) {
 
     await queryInterface.bulkDelete('QuizCategories', null, {
-      restartIdentity: true
+      truncate: true,
+      restartIdentity: true,
+      cascade: true
     });
   }
 };
