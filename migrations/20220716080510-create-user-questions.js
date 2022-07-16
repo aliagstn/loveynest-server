@@ -9,9 +9,11 @@ module.exports = {
                 type: Sequelize.INTEGER,
             },
             question: {
+                allowNull: false,
                 type: Sequelize.STRING,
             },
             answer: {
+                allowNull: false,
                 type: Sequelize.STRING,
             },
             responsePartner: {

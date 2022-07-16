@@ -1,0 +1,22 @@
+{
+    "Users" : [
+        {
+            "nickname": "Lord",
+            "email": "lord@email.com",
+            "password": "qwerty"
+
+        },
+        {
+            "nickname": "Redsky",
+            "email": "redsky@email.com",
+            "password": "qwerty"
+
+        }
+    ],
+    "Couples" : [
+        {
+            "UserId1": 1,
+            "UserId2": 2
+        }
+    ]
+}

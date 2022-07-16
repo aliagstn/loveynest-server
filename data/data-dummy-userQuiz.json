@@ -1,0 +1,55 @@
+{
+    "UserQuiz" : [
+        {
+            "id": 1,
+            "title": "Makanan Kesukaan",
+            "AuthorId": 1,
+            "status" : null,
+            "totalPoint" : null,
+            "CoupleId" : 1,
+            "QuizCategoryId": 3
+        },
+        {
+            "id": 2,
+            "title": "Film Kesukaan",
+            "AuthorId": 1,
+            "status" : null,
+            "totalPoint" : null,
+            "CoupleId" : 1,
+            "QuizCategoryId": 2
+        }
+    ],
+    "UserQuestion": [
+        {
+            "QuizId": 1,
+            "question": "Apa makanan favourit aku kalau musim hujan",
+            "answer": "Mie ayam bakso",
+            "responsePartner": null,
+            "valuePartner": null
+        },
+        {
+            "QuizId": 2,
+            "question": "Apa film horor favourit aku",
+            "answer": "Pocong Mumun",
+            "responsePartner": null,
+            "valuePartner": null
+        }
+    ],
+    "QuizCategories": [
+        {
+            "id": 1,
+            "quizCategory":"Sport",
+            "imgUrl": "https://www.freepnglogos.com/uploads/sport-png/sport-sports-management-asb-online-34.png"
+        },
+        {
+            "id": 2,
+            "quizCategory": "Kuliner",
+            "imgUrl": "https://th.bing.com/th/id/R.8557310eb125b18e3675617a75d0465a?rik=bsHtHSv8dQZRZQ&riu=http%3a%2f%2fclipart-library.com%2fimg%2f1002670.png&ehk=7usGJK15TApcyFVZEIuhPRvE4QSRc2L%2fuq%2fQHOLQWCg%3d&risl=&pid=ImgRaw&r=0"
+        },
+        {
+            "id": 3,
+            "quizCategory": "Movies",
+            "imgUrl": "https://cdn1.vectorstock.com/i/1000x1000/11/55/flat-design-concept-cinema-icon-with-long-sh-vector-3311155.jpg"
+        }
+    ]
+}

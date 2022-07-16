@@ -11,11 +11,34 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      QuizCategories.hasMany(models.UserQuizzes, { foreignKey: "QuizCategoryId" })
     }
   }
   QuizCategories.init({
-    quizCategory: DataTypes.STRING,
-    imgUrl: DataTypes.STRING
+    quizCategory: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notNull: {
+          msg: "Quiz category is required"
+        },
+        notEmpty: {
+          msg: "Quiz category is required"
+        }
+      }
+    },
+    imgUrl: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notNull: {
+          msg: "Image URL is required"
+        },
+        notEmpty: {
+          msg: "Image URL is required"
+        }
+      }
+    }
   }, {
     sequelize,
     modelName: 'QuizCategories',
