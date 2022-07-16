@@ -1,0 +1,20 @@
+[
+  {
+    "nickname": "gunawan",
+    "email": "ipul@mail.com",
+    "password": "123456",
+    "userCode": "KB1234CD",
+    "partnerCode": "CD1234KB",
+    "photoProfile": "https://assets.pikiran-rakyat.com/crop/25x5:652x382/x/photo/2022/02/09/1710122339.jpg",
+    "CoupleId": 1
+  },
+  {
+    "nickname": "iu",
+    "email": "iucantik@mail.com",
+    "password": "123456",
+    "userCode": "CD1234KB",
+    "partnerCode": "KB1234CD",
+    "photoProfile": "https://assets.pikiran-rakyat.com/crop/25x5:652x382/x/photo/2022/02/09/1710122339.jpg",
+    "CoupleId": 1
+  }
+]
