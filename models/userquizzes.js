@@ -2,11 +2,10 @@
 const { Model, Sequelize } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
     class UserQuiz extends Model {
-
         static associate(models) {
             // define association here
-            UserQuiz.belongsTo(models.QuizCategory, { foreignKey: "QuizCategoryId" })
-            UserQuiz.hasMany(models.UserQuestion, { foreignKey: "QuizId" })
+            UserQuiz.belongsTo(models.QuizCategory, { foreignKey: "QuizCategoryId" });
+            UserQuiz.hasMany(models.UserQuestion, { foreignKey: "QuizId" });
         }
     }
     UserQuiz.init(
@@ -16,12 +15,12 @@ module.exports = (sequelize, DataTypes) => {
                 allowNull: false,
                 validate: {
                     notNull: {
-                        msg: "Tittle is required"
+                        msg: "Tittle is required",
                     },
                     notEmpty: {
-                        msg: "Tittle is required"
-                    }
-                }
+                        msg: "Tittle is required",
+                    },
+                },
             },
             status: DataTypes.STRING,
             totalPoint: DataTypes.INTEGER,
