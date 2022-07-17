@@ -263,6 +263,6 @@ _Response (500 - Internal Server Error)_
 ```json
 {
     "statusCode": 500,
-  "message": "Internal server error"
+    "message": "Internal server error"
 }
 ```
