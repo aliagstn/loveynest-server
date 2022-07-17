@@ -1,23 +1,15 @@
-'use strict';
+"use strict";
 
 module.exports = {
   async up(queryInterface, Sequelize) {
-
-    const users = require('../data/data-dummy-user.json').Users
-    users.forEach(user => {
-      user.createdAt = new Date()
-      user.updatedAt = new Date()
+    const users = require("../data/users.json");
+    users.forEach((el) => {
+      el.createdAt = el.updatedAt = new Date();
     });
-
-    await queryInterface.bulkInsert('Users', users, {});
+    await queryInterface.bulkInsert("Users", users, {});
   },
 
   async down(queryInterface, Sequelize) {
-
-    await queryInterface.bulkDelete('Users', null, {
-      truncate: true,
-      restartIdentity: true,
-      cascade: true
-    });
-  }
+    await queryInterface.bulkDelete("Users", null, {});
+  },
 };

@@ -1,27 +1,17 @@
-'use strict'
+"use strict";
+const cors = require("cors");
+const express = require("express");
+const app = express();
+const port = 3000;
+const routerApp = require("./routers/app-quiz");
 
-if (process.env.NODE_ENV !== 'production') {
-    require('dotenv').config()
-}
+app.use(cors());
 
-const express = require('express')
-const cors = require('cors')
-const app = express()
-const port = process.env.PORT
-const router = require('./routers/quiz-router')
-const error_handler = require('./middlewares/errror-handler')
+app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
 
-app.use(cors())
-app.use(express.urlencoded({ extended: false }))
-app.use(express.json())
-
-app.get('/', (req, res) => {
-    res.send('Wellcome bro')
-})
-
-app.use(router)
-app.use(error_handler)
+app.use("/app", routerApp);
 
 app.listen(port, () => {
-    console.log(`This awesome app listening on http://localhost:${port}`)
-})
+  console.log(`Example app listening on port ${port}`);
+});
