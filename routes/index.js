@@ -1,9 +1,9 @@
 const express = require("express");
 const router = express.Router();
-const routerUsers = require("./users");
 
-router.use("/users", routerUsers);
-router.use("/appquiz", require("./app-quiz"));
-router.use("/userquiz", require("./quiz-router"));
+router.use("/users", require("./users"));
+router.use("/couple", require("./couple"));
+router.use("/appquiz", require("./appquiz"));
+router.use("/userquiz", require("./userquiz"));
 
 module.exports = router;

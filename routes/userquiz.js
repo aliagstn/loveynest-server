@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const QuizController = require("../controllers/quiz-controller");
+const QuizController = require("../controllers/quizcontroller");
 
 router.get("/", QuizController.getQuiz);
 router.post("/", QuizController.createQuiz);

@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
                 foreignKey: "QuizId",
             });
             AppQuizResult.belongsTo(models.Couple, {
-                foreignKey: "coupleId",
+                foreignKey: "CoupleId",
             });
         }
     }
