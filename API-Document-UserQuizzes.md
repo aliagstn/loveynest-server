@@ -119,6 +119,7 @@ _Response (200 - OK)_
 _Response (400 - Bad Request)_
 ```json
 {
+    "statusCode": 400,
     "message"   : "This Quiz allready done"
 }
 ```
@@ -126,12 +127,13 @@ _Response (404 - Not Found)_
 
 ```json
 {
+    "statusCode": 404,
     "message"   : "Quiz is not found"
 }
 ```
 &nbsp;
 
-## 4. PATCH /quiz/:quizId
+## 4. GET /quiz/:quizId
 Description:
 - Get quiz by ID
 
@@ -155,7 +157,7 @@ _Response (200 - OK)_
     "UserQuestions": [
         {
             "id": "integer",
-            "question": "Apa makanan favourit aku kalau musim hujan",
+            "question": "string",
             "optionA": "string",
             "optionB": "string",
             "answer": "string",
@@ -175,6 +177,7 @@ _Response (404 - Not Found)_
 
 ```json
 {
+    "statusCode": 400,
     "message"   : "Quiz is not found"
 }
 ```
@@ -210,6 +213,7 @@ _Response (201 - CREATED)_
 _Response (400 - Bad Request)_
 ```json
 {
+    "statusCode": 400,
     "message"   : "This Question allready done"
 }
 ```
@@ -217,6 +221,7 @@ _Response (404 - Not Found)_
 
 ```json
 {
+    "statusCode": 404,
     "message"   : "Quiz is not found"
 }
 ```
@@ -246,6 +251,7 @@ _Response (404 - Not Found)_
 
 ```json
 {
+    "statusCode": 404,
     "message"   : "Quiz is not found"
 }
 ```
@@ -256,6 +262,7 @@ _Response (500 - Internal Server Error)_
 
 ```json
 {
+    "statusCode": 500,
   "message": "Internal server error"
 }
 ```
