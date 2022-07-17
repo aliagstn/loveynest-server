@@ -14,7 +14,14 @@ module.exports = (sequelize, DataTypes) => {
   User.init(
     {
       nickname: DataTypes.STRING,
-      email: DataTypes.STRING,
+      email: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: {
+          args: true,
+          msg: "Email already exists",
+        },
+      },
       password: DataTypes.STRING,
       userCode: DataTypes.STRING,
       partnerCode: DataTypes.STRING,
@@ -26,5 +33,29 @@ module.exports = (sequelize, DataTypes) => {
       modelName: "User",
     }
   );
+  User.beforeCreate(async (instance) => {
+    try {
+      const users = await User.findAll()
+      const usersCode = users.map((code) => {
+        return code.userCode;
+      })
+
+      instance.userCode;
+      do {
+        instance.userCode = 'LV-' + Math.floor(Math.random() * 10000);
+
+      } while (usersCode.indexOf(instance.userCode) !== -1);
+
+      console.log(instance.userCode, '<<<<<<');
+    } catch (err) {
+      console.log(err);
+    }
+
+  })
+
+  // User.afterUpdate(async (instance) => {
+
+  // })
+
   return User;
 };

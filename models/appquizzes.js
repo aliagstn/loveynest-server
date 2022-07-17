@@ -13,15 +13,14 @@ module.exports = (sequelize, DataTypes) => {
       });
     }
   }
-  AppQuiz.init(
-    {
-      question: DataTypes.ARRAY(DataTypes.STRING),
-      title: DataTypes.STRING,
-    },
-    {
-      sequelize,
-      modelName: "AppQuiz",
-    }
-  );
+
+  AppQuiz.init({
+    question: DataTypes.ARRAY(DataTypes.STRING),
+    title: DataTypes.STRING
+  }, {
+    sequelize,
+    modelName: 'AppQuiz',
+  });
   return AppQuiz;
 };
+
