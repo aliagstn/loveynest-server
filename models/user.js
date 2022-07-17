@@ -33,7 +33,6 @@ module.exports = (sequelize, DataTypes) => {
       modelName: "User",
     }
   );
-
   User.beforeCreate(async (instance) => {
     try {
       const users = await User.findAll()

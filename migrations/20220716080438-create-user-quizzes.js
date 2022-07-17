@@ -9,6 +9,7 @@ module.exports = {
         type: Sequelize.INTEGER,
       },
       title: {
+      allowNull: false,
         type: Sequelize.STRING,
       },
       status: {
@@ -51,4 +52,5 @@ module.exports = {
   async down(queryInterface, Sequelize) {
     await queryInterface.dropTable("userQuizzes");
   },
-};
+
+ 

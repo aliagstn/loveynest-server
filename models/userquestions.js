@@ -1,9 +1,8 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
+"use strict";
+const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
-  class userQuestion extends Model {
+
+  class UserQuestion extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -11,17 +10,57 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      UserQuestion.belongsTo(models.UserQuiz, { foreignKey: "QuizId" })
     }
   }
-  userQuestion.init({
-    question: DataTypes.STRING,
-    answer: DataTypes.STRING,
-    responsePartner: DataTypes.STRING,
-    valuePartner: DataTypes.BOOLEAN,
-    QuizId: DataTypes.INTEGER
-  }, {
-    sequelize,
-    modelName: 'userQuestion',
-  });
-  return userQuestion;
+  UserQuestion.init(
+    {
+      question: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          notNull: {
+            msg: "Question is required"
+          },
+          notEmpty: {
+            msg: "Question is required"
+          }
+        }
+      },
+      optionA: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          notNull: {
+            msg: "Option A is required"
+          },
+          notEmpty: {
+            msg: "Option A is required"
+          }
+        }
+      },
+      optionB: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          notNull: {
+            msg: "Option B is required"
+          },
+          notEmpty: {
+            msg: "Option B is required"
+          }
+        }
+      },
+      answer: DataTypes.STRING,
+      responsePartner: DataTypes.STRING,
+      valuePartner: DataTypes.BOOLEAN,
+      QuizId: DataTypes.INTEGER,
+    },
+    {
+      sequelize,
+      modelName: "UserQuestion",
+    }
+  );
+  return UserQuestion;
 };
+

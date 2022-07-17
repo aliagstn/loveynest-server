@@ -1,29 +1,38 @@
 "use strict";
-const { Model } = require("sequelize");
+const { Model, Sequelize } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
-  class UserQuiz extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
-    static associate(models) {
-      // define association here
+    class UserQuiz extends Model {
+
+        static associate(models) {
+            // define association here
+            UserQuiz.belongsTo(models.QuizCategory, { foreignKey: "QuizCategoryId" })
+            UserQuiz.hasMany(models.UserQuestion, { foreignKey: "QuizId" })
+        }
     }
-  }
-  UserQuiz.init(
-    {
-      title: DataTypes.STRING,
-      status: DataTypes.STRING,
-      totalPoint: DataTypes.INTEGER,
-      AuthorId: DataTypes.INTEGER,
-      CoupleId: DataTypes.INTEGER,
-      QuizCategoryId: DataTypes.INTEGER,
-    },
-    {
-      sequelize,
-      modelName: "userQuiz",
-    }
-  );
-  return UserQuiz;
+    UserQuiz.init(
+        {
+            title: {
+                type: DataTypes.STRING,
+                allowNull: false,
+                validate: {
+                    notNull: {
+                        msg: "Tittle is required"
+                    },
+                    notEmpty: {
+                        msg: "Tittle is required"
+                    }
+                }
+            },
+            status: DataTypes.STRING,
+            totalPoint: DataTypes.INTEGER,
+            AuthorId: DataTypes.INTEGER,
+            CoupleId: DataTypes.INTEGER,
+            QuizCategoryId: DataTypes.INTEGER,
+        },
+        {
+            sequelize,
+            modelName: "UserQuiz",
+        }
+    );
+    return UserQuiz;
 };

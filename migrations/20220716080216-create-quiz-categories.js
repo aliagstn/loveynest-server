@@ -9,9 +9,11 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       quizCategory: {
+        allowNull: false,
         type: Sequelize.STRING
       },
       imgUrl: {
+        allowNull: false,
         type: Sequelize.STRING
       },
       createdAt: {
