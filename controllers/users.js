@@ -181,6 +181,28 @@ class userController {
       console.log(err);
     }
   }
+
+  static async deleteCouple(req, res) {
+    try {
+      const { id } = req.params;
+
+      const couple = await Couple.findByPk(id);
+
+      const deleted = await Couple.destroy({
+        where: {
+          id
+        },
+        returning: true,
+      });
+
+      res.status(200).json({
+        message: 'Couple deleted successfully',
+        data: deleted,
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  }
 }
 
 module.exports = userController;
