@@ -7,7 +7,7 @@ class QuizController {
     //* READ ALL QUIZ (/quizes)
     static async getQuiz(req, res, next) {
         try {
-            // console.log('masuk');
+
             const quizes = await UserQuiz.findAll(
                 {
                     order: [['id', 'ASC']],
@@ -50,9 +50,16 @@ class QuizController {
                 ]
             })
 
-            res.status(200).json(quiz)
+            if (!quiz) {
+
+                throw { name: 'QUIZ_NOT_FOUND' }
+            } else {
+
+                res.status(200).json(quiz)
+            }
+
         } catch (error) {
-            console.log(error);
+
             next(error)
         }
     }
@@ -65,9 +72,8 @@ class QuizController {
         try {
             const AuthorId = 1 //? didapat dari authN
             const CoupleId = 1 //? didapat dari authN
-            // const QuizCategoryId 
+
             const { title, QuizCategoryId, question, answer, optionA, optionB } = req.body
-            console.log(question, answer, optionA, optionB);
 
             if (!answer || !question || !optionA || !optionB) {
                 throw { name: 'EMPTY_INPUT' }
@@ -79,7 +85,7 @@ class QuizController {
 
             //* Create User Quiz
             const [userQuiz, create] = await UserQuiz.findOrCreate({
-                where: inputQuiz
+                where: inputQuiz, transaction: t
             })
             // console.log(create);
 
@@ -107,7 +113,7 @@ class QuizController {
                 })
             }
         } catch (error) {
-            console.log(error);
+
             t.rollback()
             next(error)
         }
@@ -125,49 +131,177 @@ class QuizController {
             const currentQuiz = await UserQuiz.findByPk(Number(quizId))
 
             if (!currentQuestion || !currentQuiz) {
+
                 throw { name: 'QUIZ_NOT_FOUND' }
+
+            } else if (currentQuiz.status === 'done') {
+
+                throw { name: 'QUIZ_DONE' }
+
             } else {
+
                 //* SET TOTAL POINT
+
+                const currentQuiz = await UserQuiz.findByPk(Number(quizId))
+
                 let valuePartner = false
-                let status
-                let totalPoint = 0
+                let totalPoint = currentQuiz.totalPoint
+                let status = currentQuiz.status
+
                 if (responsePartner.toLowerCase() === currentQuestion.answer.toLowerCase()) {
+
                     valuePartner = true
-                    status = "done"
-                    totalPoint = 100
                 }
 
-                const updateResponsePartner = await UserQuestion.update(
-                    {
-                        responsePartner,
-                        valuePartner,
-                    }, {
-                    where: {
-                        id: Number(questionId)
-                    }
-                }, { transaction: t })
+                if (valuePartner === true) {
 
-                const updateStatusQuiz = await UserQuiz.update(
-                    {
-                        status,
-                        totalPoint
-                    }, {
-                    where: {
-                        id: Number(quizId)
-                    }
-                }, { transaction: t })
+                    //* UPDATE RESPONSE DAN VALUE PARTNER
 
-                await t.commit()
+                    const updateResponsePartner = await UserQuestion.update(
+                        {
+                            responsePartner,
+                            valuePartner,
+                        }, {
+                        where: {
+                            id: Number(questionId)
+                        }
+                    }, { transaction: t })
 
-                res.status(200).json({
-                    message: "Response has been updated"
-                })
+                    //* UPDATE STATUS DAN TOTAL POINT
+
+                    totalPoint += 100
+                    status = "done"
+
+                    const updateStatusQuiz = await UserQuiz.update(
+                        {
+                            status,
+                            totalPoint
+                        }, {
+                        where: {
+                            id: Number(quizId)
+                        }
+                    }, { transaction: t })
+
+                    await t.commit()
+
+                    res.status(200).json({
+                        message: "Response has been updated"
+                    })
+
+                } else {
+
+                    //* UPDATE RESPONSE DAN VALUE PARTNER
+
+                    const updateResponsePartner = await UserQuestion.update(
+                        {
+                            responsePartner,
+                            valuePartner,
+                        }, {
+                        where: {
+                            id: Number(questionId)
+                        }
+                    }, { transaction: t })
+
+                    //* UPDATE STATUS DAN TOTAL POINT
+
+                    const updateStatusQuiz = await UserQuiz.update(
+                        {
+                            status,
+                            totalPoint
+                        }, {
+                        where: {
+                            id: Number(quizId)
+                        }
+                    }, { transaction: t })
+
+                    await t.commit()
+
+                    res.status(200).json({
+                        message: "Response has been updated"
+                    })
+                }
             }
 
+        } catch (error) {
+
+            t.rollback()
+            next(error)
+        }
+    }
+
+    //* CREATE NEW QUESTION
+    static async createQuestion(req, res, next) {
+
+        const t = await sequelize.transaction()
+
+        try {
+            const { quizId } = req.params
+            const { question, answer, optionA, optionB } = req.body
+
+            if (!answer || !question || !optionA || !optionB) {
+                throw { name: 'EMPTY_INPUT' }
+            } else {
+                const inputQuestion = {
+                    question,
+                    answer,
+                    QuizId: quizId,
+                    responsePartner: '',
+                    valuePartner: null,
+                    optionA,
+                    optionB
+                }
+
+                const [userQuestions, create] = await UserQuestion.findOrCreate({ where: inputQuestion, transaction: t })
+
+                if (!create) {
+                    throw { name: 'QUESTION_ALLREADY_EXIST' }
+                } else {
+
+                    //* UPDATE STATUS 
+                    const updateStatusQuiz = await UserQuiz.update(
+                        {
+                            status: 'Undone',
+                        }, {
+                        where: {
+                            id: Number(quizId)
+                        }
+                    }, { transaction: t })
+
+                    await t.commit()
+
+                    res.status(201).json({
+                        message: "Question create successfully"
+                    })
+
+                }
+            }
 
         } catch (error) {
             console.log(error);
             t.rollback()
+            next(error)
+        }
+    }
+
+    //* GET TOTAL SCORE
+    static async totalScore(req, res, next) {
+
+        try {
+
+            const { quizId: id } = req.params
+            const quiz = await UserQuiz.findByPk(Number(id))
+
+            if (!quiz) {
+
+                throw { name: 'QUIZ_NOT_FOUND' }
+            } else {
+
+                res.status(200).json({
+                    totalPoint: quiz.totalPoint,
+                    statusQuiz: quiz.status
+                })
+            }
+        } catch (error) {
             next(error)
         }
     }
