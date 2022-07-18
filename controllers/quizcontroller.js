@@ -12,10 +12,8 @@ class QuizController {
                     exclude: ["createdAt", "updatedAt"],
                 },
             });
-
             res.status(200).json(quizes);
         } catch (error) {
-            console.log(error);
             next(error);
         }
     }
@@ -62,10 +60,10 @@ class QuizController {
             const AuthorId = 1; //? didapat dari authN
             const CoupleId = 1; //? didapat dari authN
 
-            const { title, QuizCategoryId, question, answer, optionA, optionB } = req.body;
-
-            if (!answer || !question || !optionA || !optionB) {
-                throw { name: "EMPTY_INPUT" };
+            const { question1, question2, question3, question4, question5, quiz } = req.body;
+            const { title, QuizCategoryId } = quiz;
+            if (!question1 && !question2 && !question3 && !question4 && !question5) {
+                throw { code: 400 };
             }
 
             const inputQuiz = {
@@ -77,28 +75,23 @@ class QuizController {
                 totalPoint: 0,
             };
 
-            //* Create User Quiz
             const [userQuiz, create] = await UserQuiz.findOrCreate({
                 where: inputQuiz,
                 transaction: t,
             });
-            // console.log(create);
 
             if (!create) {
                 throw { name: "QUIZ_ALLREADY_EXIST" };
             } else {
                 //* Create User Questions
-                const inputQuestion = {
-                    question,
-                    answer,
-                    QuizId: userQuiz.id,
-                    responsePartner: "",
-                    valuePartner: null,
-                    optionA,
-                    optionB,
-                };
+                const questionObj = { question1, question2, question3, question4, question5 };
+                let question = [];
+                for (const key in questionObj) {
+                    questionObj[key].QuizId = userQuiz.id;
+                    question.push(questionObj[key]);
+                }
 
-                const userQuestions = await UserQuestion.create(inputQuestion, { transaction: t });
+                const userQuestions = await UserQuestion.bulkCreate(question, { transaction: t });
 
                 await t.commit();
 
@@ -117,105 +110,126 @@ class QuizController {
         const t = await sequelize.transaction();
 
         try {
-            const { responsePartner } = req.body;
-            const { quizId, questionId } = req.params;
+            const { answer1, answer2, answer3, answer4, answer5 } = req.body;
+            const { quizId } = req.params;
 
-            const currentQuestion = await UserQuestion.findByPk(Number(questionId));
-            const currentQuiz = await UserQuiz.findByPk(Number(quizId));
-
-            if (!currentQuestion || !currentQuiz) {
+            const quiz = await UserQuiz.findByPk(
+                Number(quizId),
+                {
+                    include: [UserQuestion],
+                    where: {
+                        QuizId: quizId,
+                    },
+                    order: [["id", "ASC"]],
+                },
+                { transaction: t }
+            );
+            if (!quiz) {
                 throw { name: "QUIZ_NOT_FOUND" };
-            } else if (currentQuiz.status === "done") {
+            } else if (quiz.status === "done") {
                 throw { name: "QUIZ_DONE" };
             } else {
-                //* SET TOTAL POINT
-
-                const currentQuiz = await UserQuiz.findByPk(Number(quizId));
-
-                let valuePartner = false;
-                let totalPoint = currentQuiz.totalPoint;
-                let status = currentQuiz.status;
-
-                if (responsePartner.toLowerCase() === currentQuestion.answer.toLowerCase()) {
-                    valuePartner = true;
+                let { UserQuestions } = quiz;
+                if (answer1) {
+                    await UserQuestion.update(
+                        {
+                            responsePartner: answer1,
+                        },
+                        {
+                            where: {
+                                id: UserQuestions[0].id,
+                            },
+                        },
+                        { transaction: t }
+                    );
                 }
-
-                if (valuePartner === true) {
-                    //* UPDATE RESPONSE DAN VALUE PARTNER
-
-                    const updateResponsePartner = await UserQuestion.update(
+                if (answer2) {
+                    await UserQuestion.update(
                         {
-                            responsePartner,
-                            valuePartner,
+                            responsePartner: answer2,
                         },
                         {
                             where: {
-                                id: Number(questionId),
+                                id: UserQuestions[1].id,
                             },
                         },
                         { transaction: t }
                     );
-
-                    //* UPDATE STATUS DAN TOTAL POINT
-
-                    totalPoint += 100;
-                    status = "done";
-
-                    const updateStatusQuiz = await UserQuiz.update(
-                        {
-                            status,
-                            totalPoint,
-                        },
-                        {
-                            where: {
-                                id: Number(quizId),
-                            },
-                        },
-                        { transaction: t }
-                    );
-
-                    await t.commit();
-
-                    res.status(200).json({
-                        message: "Response has been updated",
-                    });
-                } else {
-                    //* UPDATE RESPONSE DAN VALUE PARTNER
-
-                    const updateResponsePartner = await UserQuestion.update(
-                        {
-                            responsePartner,
-                            valuePartner,
-                        },
-                        {
-                            where: {
-                                id: Number(questionId),
-                            },
-                        },
-                        { transaction: t }
-                    );
-
-                    //* UPDATE STATUS DAN TOTAL POINT
-
-                    const updateStatusQuiz = await UserQuiz.update(
-                        {
-                            status,
-                            totalPoint,
-                        },
-                        {
-                            where: {
-                                id: Number(quizId),
-                            },
-                        },
-                        { transaction: t }
-                    );
-
-                    await t.commit();
-
-                    res.status(200).json({
-                        message: "Response has been updated",
-                    });
                 }
+                if (answer3) {
+                    await UserQuestion.update(
+                        {
+                            responsePartner: answer3,
+                        },
+                        {
+                            where: {
+                                id: UserQuestions[2].id,
+                            },
+                        },
+                        { transaction: t }
+                    );
+                }
+                if (answer4) {
+                    await UserQuestion.update(
+                        {
+                            responsePartner: answer4,
+                        },
+                        {
+                            where: {
+                                id: UserQuestions[3].id,
+                            },
+                        },
+                        { transaction: t }
+                    );
+                }
+                if (answer5) {
+                    await UserQuestion.update(
+                        {
+                            responsePartner: answer5,
+                        },
+                        {
+                            where: {
+                                id: UserQuestions[4].id,
+                            },
+                        },
+                        { transaction: t }
+                    );
+                }
+                const afterUpdateQuiz = await UserQuiz.findByPk(
+                    Number(quizId),
+                    {
+                        include: [UserQuestion],
+                        where: {
+                            QuizId: quizId,
+                        },
+                        order: [["id", "ASC"]],
+                    },
+                    { transaction: t }
+                );
+                let point = 0;
+
+                afterUpdateQuiz.UserQuestions.forEach((el) => {
+                    if (el.responsePartner === el.answer) {
+                        point += 100;
+                    }
+                });
+                const updateStatusQuiz = await UserQuiz.update(
+                    {
+                        status: "done",
+                        totalPoint: point,
+                    },
+                    {
+                        where: {
+                            id: Number(quizId),
+                        },
+                    },
+                    { transaction: t }
+                );
+
+                await t.commit();
+                res.status(200).json({
+                    message: "Response has been updated",
+                });
             }
         } catch (error) {
             t.rollback();
@@ -224,62 +238,63 @@ class QuizController {
     }
 
     //* CREATE NEW QUESTION
-    static async createQuestion(req, res, next) {
-        const t = await sequelize.transaction();
+    // static async createQuestion(req, res, next) {
+    //     const t = await sequelize.transaction();
 
-        try {
-            const { quizId } = req.params;
-            const { question, answer, optionA, optionB } = req.body;
+    //     try {
+    //         const { quizId } = req.params;
+    //         const { question, answer, optionA, optionB } = req.body;
 
-            if (!answer || !question || !optionA || !optionB) {
-                throw { name: "EMPTY_INPUT" };
-            } else {
-                const inputQuestion = {
-                    question,
-                    answer,
-                    QuizId: quizId,
-                    responsePartner: "",
-                    valuePartner: null,
-                    optionA,
-                    optionB,
-                };
+    //         if (!answer || !question || !optionA || !optionB) {
+    //             throw { name: "EMPTY_INPUT" };
+    //         } else {
+    //             const inputQuestion = {
+    //                 question,
+    //                 answer,
+    //                 QuizId: quizId,
+    //                 responsePartner: "",
+    //                 valuePartner: null,
+    //                 optionA,
+    //                 optionB,
+    //             };
 
-                const [userQuestions, create] = await UserQuestion.findOrCreate({
-                    where: inputQuestion,
-                    transaction: t,
-                });
+    //             const [userQuestions, create] = await UserQuestion.findOrCreate({
+    //                 where: inputQuestion,
+    //                 transaction: t,
+    //             });
 
-                if (!create) {
-                    throw { name: "QUESTION_ALLREADY_EXIST" };
-                } else {
-                    //* UPDATE STATUS
-                    const updateStatusQuiz = await UserQuiz.update(
-                        {
-                            status: "Undone",
-                        },
-                        {
-                            where: {
-                                id: Number(quizId),
-                            },
-                        },
-                        { transaction: t }
-                    );
+    //             if (!create) {
+    //                 throw { name: "QUESTION_ALLREADY_EXIST" };
+    //             } else {
+    //                 //* UPDATE STATUS
+    //                 const updateStatusQuiz = await UserQuiz.update(
+    //                     {
+    //                         status: "Undone",
+    //                     },
+    //                     {
+    //                         where: {
+    //                             id: Number(quizId),
+    //                         },
+    //                     },
+    //                     { transaction: t }
+    //                 );
 
-                    await t.commit();
+    //                 await t.commit();
 
-                    res.status(201).json({
-                        message: "Question create successfully",
-                    });
-                }
-            }
-        } catch (error) {
-            console.log(error);
-            t.rollback();
-            next(error);
-        }
-    }
+    //                 res.status(201).json({
+    //                     message: "Question create successfully",
+    //                 });
+    //             }
+    //         }
+    //     } catch (error) {
+    //         console.log(error);
+    //         t.rollback();
+    //         next(error);
+    //     }
+    // }
 
     //* GET TOTAL SCORE
+
     static async totalScore(req, res, next) {
         try {
             const { quizId: id } = req.params;

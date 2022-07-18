@@ -18,7 +18,19 @@ module.exports = (sequelize, DataTypes) => {
     }
     AppQuizResult.init(
         {
-            responseUser: DataTypes.ARRAY(DataTypes.BOOLEAN),
+            responseUser: {
+                type: DataTypes.ARRAY(DataTypes.BOOLEAN),
+                validate: {
+                    customValidator() {
+                        if (Array.isArray(this.responseUser) === false) {
+                            throw new Error("Response User must be an array");
+                        }
+                        if (this.responseUser.length !== 7) {
+                            throw new Error("All questions must be answered");
+                        }
+                    },
+                },
+            },
             QuizId: DataTypes.INTEGER,
             UserId: DataTypes.INTEGER,
             CoupleId: DataTypes.INTEGER,

@@ -1,28 +1,12 @@
 const app = require("../app.js");
 const request = require("supertest");
-const { User } = require("../models/index");
+const { User, AppQuiz, AppQuizResult } = require("../models/index");
 
 const user1 = {
     email: "user.test@mail.com",
     name: "User Test",
     password: "usertest",
 };
-
-afterAll((done) => {
-    User.destroy({ truncate: true, cascade: true, restartIdentity: true })
-        .then((_) => {
-            return Course.destroy({ truncate: true, cascade: true, restartIdentity: true });
-        })
-        .then((_) => {
-            return MyCourse.destroy({ truncate: true, cascade: true, restartIdentity: true });
-        })
-        .then((_) => {
-            done();
-        })
-        .catch((err) => {
-            done(err);
-        });
-});
 
 describe("User Routes Test", () => {
     describe("POST /register - create new user", () => {

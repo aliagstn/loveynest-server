@@ -112,7 +112,7 @@ class userController {
             const { id } = req.params;
             const { partnerCode } = req.body;
 
-            const user1 = await User.findByPk(id);
+            const user1 = await User.findByPk(id, { transaction: t });
 
             if (partnerCode === user1.userCode) {
                 throw { code: 404 };

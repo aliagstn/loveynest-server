@@ -5,7 +5,7 @@
     "main": "app.js",
     "scripts": {
         "dev": "npx nodemon ./bin/www",
-        "test": "npx sequelize-cli --env=test db:seed:all & jest --forceExit --verbose --runInBand"
+        "test": " jest --forceExit --verbose --runInBand --coverage"
     },
     "repository": {
         "type": "git",
