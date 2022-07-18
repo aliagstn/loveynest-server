@@ -3,7 +3,7 @@ const { convertPayloadToToken } = require("../helpers/jwt");
 const { compare } = require("../helpers/bcrypt");
 
 class userController {
-    static async addUser(req, res) {
+    static async addUser(req, res, next) {
         try {
             const { nickname, email, password, userCode, partnerCode, photoProfile } = req.body;
 
@@ -16,8 +16,6 @@ class userController {
                 photoProfile,
             });
 
-            delete newUser.password;
-
             res.status(201).json({
                 message: "User created successfully",
                 data: {
@@ -28,11 +26,47 @@ class userController {
                 },
             });
         } catch (err) {
-            console.log(err);
+            next(err);
         }
     }
 
-    static async getAllUsers(req, res) {
+    static async loginUser(req, res, next) {
+        try {
+            const { email, password } = req.body;
+
+            const user = await User.findOne({
+                where: {
+                    email,
+                },
+            });
+            if (!user) {
+                throw { code: 401 };
+            }
+            const passwordVerified = comparePassword(password, user.password);
+
+            if (!passwordVerified) {
+                throw { code: 401 };
+            }
+
+            const payload = {
+                id: user.id,
+            };
+
+            const access_token = convertPayloadToToken(payload);
+
+            res.status(200).json({
+                message: "User logged in successfully",
+                data: {
+                    nickname: user.nickname,
+                    email: user.email,
+                    access_token,
+                },
+            });
+        } catch (err) {
+            next(err);
+        }
+    }
+    static async getAllUsers(req, res, next) {
         try {
             const users = await User.findAll({
                 attributes: {
@@ -40,16 +74,13 @@ class userController {
                 },
             });
 
-            res.status(200).json({
-                message: "Users retrieved successfully",
-                data: users,
-            });
+            res.status(200).json(users);
         } catch (err) {
-            console.log(err);
+            next(err);
         }
     }
 
-    static async getUserById(req, res) {
+    static async getUserById(req, res, next) {
         try {
             const { id } = req.params;
 
@@ -59,20 +90,17 @@ class userController {
                 },
             });
 
-            res.status(200).json({
-                message: "User retrieved successfully",
-                data: user,
-            });
+            res.status(200).json(user);
         } catch (err) {
-            console.log(err);
+            next(err);
         }
     }
 
     // update user detail
-    static async updateUser(req, res) {
+    static async updateUser(req, res, next) {
         try {
             const { id } = req.params;
-            const { nickname, email, password, photoProfile } = req.body;
+            const { nickname, photoProfile } = req.body;
 
             const user = await User.findByPk(id);
 
@@ -80,8 +108,6 @@ class userController {
                 const updated = await User.update(
                     {
                         nickname,
-                        email,
-                        password,
                         photoProfile,
                     },
                     {
@@ -97,16 +123,14 @@ class userController {
                     data: updated,
                 });
             } else {
-                res.status(404).json({
-                    message: "User not found",
-                });
+                throw { code: 404 };
             }
         } catch (err) {
-            console.log(err);
+            next(err);
         }
     }
 
-    static async inputPartnerCode(req, res) {
+    static async inputPartnerCode(req, res, next) {
         const t = await sequelize.transaction();
         try {
             const { id } = req.params;
@@ -194,11 +218,11 @@ class userController {
             }
         } catch (err) {
             await t.rollback();
-            console.log(err);
+            next(err);
         }
     }
 
-    static async deleteUser(req, res) {
+    static async deleteUser(req, res, next) {
         try {
             const { id } = req.params;
 
@@ -221,7 +245,7 @@ class userController {
                 });
             }
         } catch (err) {
-            console.log(err);
+            next(err);
         }
     }
 }

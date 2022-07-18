@@ -4,7 +4,6 @@ const errorHandler = (err, req, res, next) => {
     let { code, name } = err;
     let message = null;
 
-    console.log(err, "<--");
     if (name === "SequelizeValidationError") {
         code = 400;
         message = err.message.split(",");
@@ -49,8 +48,6 @@ const errorHandler = (err, req, res, next) => {
         code = 500;
         message = "Internal Server Error";
     }
-
-    console.log(err);
 
     res.status(code).json({
         statusCode: code,

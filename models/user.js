@@ -22,8 +22,34 @@ module.exports = (sequelize, DataTypes) => {
                     args: true,
                     msg: "Email already exists",
                 },
+                validate: {
+                    isEmail: {
+                        msg: "Please use email format",
+                    },
+                    notEmpty: {
+                        msg: "Email is required",
+                    },
+                    notNull: {
+                        msg: "Email is required",
+                    },
+                },
             },
-            password: DataTypes.STRING,
+            password: {
+                type: DataTypes.STRING,
+                allowNull: false,
+                validate: {
+                    notEmpty: {
+                        msg: "Password is required",
+                    },
+                    notNull: {
+                        msg: "Password is required",
+                    },
+                    len: {
+                        args: [6],
+                        msg: "Password must be at least 6 characters",
+                    },
+                },
+            },
             userCode: DataTypes.STRING,
             partnerCode: DataTypes.STRING,
             photoProfile: DataTypes.STRING,

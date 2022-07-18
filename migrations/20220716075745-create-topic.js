@@ -14,6 +14,8 @@ module.exports = {
             TopicCategoryId: {
                 type: Sequelize.INTEGER,
                 references: { model: "TopicCategories", key: "id" },
+                onUpdate: "cascade",
+                onDelete: "cascade",
             },
             createdAt: {
                 allowNull: false,

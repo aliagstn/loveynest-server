@@ -1,20 +1,56 @@
 [
-  {
-    "nickname": "gunawan",
-    "email": "ipul@mail.com",
-    "password": "123456",
-    "userCode": "KB1234CD",
-    "partnerCode": "CD1234KB",
-    "photoProfile": "https://assets.pikiran-rakyat.com/crop/25x5:652x382/x/photo/2022/02/09/1710122339.jpg",
-    "CoupleId": 1
-  },
-  {
-    "nickname": "iu",
-    "email": "iucantik@mail.com",
-    "password": "123456",
-    "userCode": "CD1234KB",
-    "partnerCode": "KB1234CD",
-    "photoProfile": "https://assets.pikiran-rakyat.com/crop/25x5:652x382/x/photo/2022/02/09/1710122339.jpg",
-    "CoupleId": 1
-  }
+    {
+        "nickname": "gunawan",
+        "email": "ipul@mail.com",
+        "password": "123456",
+        "userCode": "KB1234CD",
+        "partnerCode": "CD1234KB",
+        "photoProfile": "https://assets.pikiran-rakyat.com/crop/25x5:652x382/x/photo/2022/02/09/1710122339.jpg",
+        "CoupleId": 1
+    },
+    {
+        "nickname": "iu",
+        "email": "iucantik@mail.com",
+        "password": "123456",
+        "userCode": "CD1234KB",
+        "partnerCode": "KB1234CD",
+        "photoProfile": "https://assets.pikiran-rakyat.com/crop/25x5:652x382/x/photo/2022/02/09/1710122339.jpg",
+        "CoupleId": 1
+    },
+    {
+        "nickname": "아이유",
+        "email": "couple1@mail.com",
+        "password": "12345",
+        "userCode": "LV-1234",
+        "partnerCode": "LV-1235",
+        "CoupleId": "2",
+        "photoProfile": "https://cdn.dribbble.com/users/230875/screenshots/12078079/media/7ba8ec4a42b529dcbbc695ce0dd07a4a.jpg?compress=1&resize=768x576&vertical=top"
+    },
+    {
+        "nickname": "아이유",
+        "email": "couple1.2@mail.com",
+        "password": "12345",
+        "userCode": "LV-1235",
+        "partnerCode": "LV-1234",
+        "CoupleId": "2",
+        "photoProfile": "https://cdn.dribbble.com/users/230875/screenshots/12078079/media/c08285d2e039896a565cffeb5eb44a15.jpg?compress=1&resize=768x576&vertical=top"
+    },
+    {
+        "nickname": "couple2",
+        "email": "couple2@mail.com",
+        "password": "12345",
+        "userCode": "LV-2345",
+        "partnerCode": "LV-2346",
+        "CoupleId": "3",
+        "photoProfile": "https://cdn.dribbble.com/users/230875/screenshots/12078079/media/1aab4f168be4969bd7f99d3734b71261.jpg?compress=1&resize=768x576&vertical=top"
+    },
+    {
+        "nickname": "couple2.1",
+        "email": "couple2.1@mail.com",
+        "password": "12345",
+        "userCode": "LV-2346",
+        "partnerCode": "LV-2345",
+        "CoupleId": "3",
+        "photoProfile": "https://cdn.dribbble.com/users/230875/screenshots/12078079/media/eeb31ec92dd87b131f2930c08b91ac7c.jpg?compress=1&resize=768x576&vertical=top"
+    }
 ]

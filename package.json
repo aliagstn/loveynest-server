@@ -5,7 +5,8 @@
     "main": "app.js",
     "scripts": {
         "dev": "npx nodemon ./bin/www",
-        "test": " jest --forceExit --verbose --runInBand --coverage"
+        "test": " npx sequelize-cli --env=test db:seed:all && jest --forceExit --verbose --runInBand --coverage --detectOpenHandles",
+        "temptest": "npx sequelize-cli --env=test db:drop && npx sequelize-cli --env=test db:create && npx sequelize --env=test db:migrate"
     },
     "repository": {
         "type": "git",

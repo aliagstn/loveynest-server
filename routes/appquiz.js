@@ -1,11 +1,11 @@
 "use strict";
 const express = require("express");
-const routerApp = express.Router();
+const router = require("express").Router();
 const AppQuizControl = require("../controllers/appquizcontroller");
 
-routerApp.get("/", AppQuizControl.getAppQuiz);
-routerApp.get("/result", AppQuizControl.getResult);
-routerApp.post("/result", AppQuizControl.createResult);
-routerApp.get("/result/:id", AppQuizControl.getResultByUser);
+router.get("/", AppQuizControl.getAppQuiz);
+router.get("/result", AppQuizControl.getResult);
+router.post("/result", AppQuizControl.createResult);
+router.get("/result/:id", AppQuizControl.getResultByUser);
 
-module.exports = routerApp;
+module.exports = router;
