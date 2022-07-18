@@ -12,14 +12,27 @@ module.exports = (sequelize, DataTypes) => {
                 foreignKey: "QuizId",
             });
             AppQuizResult.belongsTo(models.Couple, {
-                foreignKey: "coupleId",
+                foreignKey: "CoupleId",
             });
         }
     }
     AppQuizResult.init(
         {
-            responseUser: DataTypes.STRING,
+            responseUser: {
+                type: DataTypes.ARRAY(DataTypes.BOOLEAN),
+                validate: {
+                    customValidator() {
+                        if (Array.isArray(this.responseUser) === false) {
+                            throw new Error("Response User must be an array");
+                        }
+                        if (this.responseUser.length !== 7) {
+                            throw new Error("All questions must be answered");
+                        }
+                    },
+                },
+            },
             QuizId: DataTypes.INTEGER,
+            UserId: DataTypes.INTEGER,
             CoupleId: DataTypes.INTEGER,
         },
         {

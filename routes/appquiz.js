@@ -1,7 +1,7 @@
 "use strict";
 const express = require("express");
 const routerApp = express.Router();
-const AppQuizControl = require("../controllers/appQuizController");
+const AppQuizControl = require("../controllers/appquizcontroller");
 
 routerApp.get("/", AppQuizControl.getAppQuiz);
 routerApp.get("/result", AppQuizControl.getResult);

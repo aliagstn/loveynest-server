@@ -1,4 +1,5 @@
 "use strict";
+const { hash } = require("../helpers/bcrypt");
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
     class User extends Model {
@@ -29,31 +30,27 @@ module.exports = (sequelize, DataTypes) => {
             CoupleId: DataTypes.INTEGER,
         },
         {
+            hooks: {
+                async beforeCreate(instance, options) {
+                    try {
+                        instance.password = hash(instance.password);
+                        const users = await User.findAll();
+                        const usersCode = users.map((code) => {
+                            return code.userCode;
+                        });
+                        instance.userCode;
+                        do {
+                            instance.userCode = Math.floor(Math.random() * 1000000);
+                        } while (usersCode.indexOf(instance.userCode) !== -1);
+                    } catch (err) {
+                        console.log(err);
+                    }
+                },
+            },
             sequelize,
             modelName: "User",
         }
     );
-    User.beforeCreate(async (instance) => {
-        try {
-            const users = await User.findAll();
-            const usersCode = users.map((code) => {
-                return code.userCode;
-            });
-
-            instance.userCode;
-            do {
-                instance.userCode = "LV-" + Math.floor(Math.random() * 10000);
-            } while (usersCode.indexOf(instance.userCode) !== -1);
-
-            console.log(instance.userCode, "<<<<<<");
-        } catch (err) {
-            console.log(err);
-        }
-    });
-
-    // User.afterUpdate(async (instance) => {
-
-    // })
 
     return User;
 };
