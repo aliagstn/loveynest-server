@@ -13,9 +13,9 @@ routerUsers.get('/:id', userController.getUserById);
 
 routerUsers.use(userAuthentication)
 
-routerUsers.put('/:id', userController.updateUser);
+routerUsers.patch('/:id', userController.updateUser);
 
-routerUsers.patch('/:id', userController.inputPartnerCode);
+routerUsers.patch('/input/:id', userController.inputPartnerCode);
 
 routerUsers.patch('/delete/:id', userController.deletePartnerCode)
 

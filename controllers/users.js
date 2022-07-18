@@ -1,4 +1,3 @@
-
 const { User, Couple, sequelize } = require('../models');
 const { comparePassword } = require('../helpers/bcrypt');
 const { convertPayloadToToken } = require('../helpers/jwt')
@@ -93,16 +92,14 @@ class userController {
   static async updateUser(req, res) {
     try {
       const { id } = req.params;
-      const { nickname, email, password, photoProfile } = req.body;
+      const { nickname, photoProfile } = req.body;
 
       const user = await User.findByPk(id);
 
       if (user) {
         const updated = await User.update({
           nickname,
-          email,
-          password,
-          photoProfile
+          photoProfile,
         },
           {
             where: {
@@ -256,6 +253,8 @@ class userController {
       console.log(err);
     }
   }
+
+
 
   static async deleteCouple(req, res) {
     try {

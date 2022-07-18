@@ -13,7 +13,7 @@ const userAuthentication = async (req, res, next) => {
 
     const payload = convertTokenToPayload(access_token)
     const { id } = payload;
-    const user = await User.fifndByPk(id);
+    const user = await User.findByPk(id);
 
     if (!user) {
       throw { name: 'InvalidToken' }
