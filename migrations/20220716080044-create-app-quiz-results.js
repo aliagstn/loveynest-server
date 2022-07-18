@@ -9,7 +9,7 @@ module.exports = {
                 type: Sequelize.INTEGER,
             },
             responseUser: {
-                type: Sequelize.STRING,
+                type: Sequelize.ARRAY(Sequelize.BOOLEAN),
             },
             QuizId: {
                 type: Sequelize.INTEGER,

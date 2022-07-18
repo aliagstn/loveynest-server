@@ -21,6 +21,7 @@ class AppQuizControl {
         try {
             const QuizId = 1;
             const { responseUser, UserId, coupleId } = req.body;
+            console.log(req.body);
             let newResult = { responseUser, QuizId, UserId, coupleId };
             const resultQuiz = await AppQuizResult.create(newResult);
 

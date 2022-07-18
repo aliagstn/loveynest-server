@@ -18,7 +18,7 @@ module.exports = (sequelize, DataTypes) => {
     }
     AppQuizResult.init(
         {
-            responseUser: DataTypes.STRING,
+            responseUser: DataTypes.ARRAY(DataTypes.BOOLEAN),
             QuizId: DataTypes.INTEGER,
             CoupleId: DataTypes.INTEGER,
         },
