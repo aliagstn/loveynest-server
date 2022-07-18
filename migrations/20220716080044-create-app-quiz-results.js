@@ -17,6 +17,8 @@ module.exports = {
                     model: "AppQuizzes",
                     key: "id",
                 },
+                onUpdate: "cascade",
+                onDelete: "cascade",
             },
             UserId: {
                 type: Sequelize.INTEGER,
@@ -27,6 +29,8 @@ module.exports = {
                     model: "Couples",
                     key: "id",
                 },
+                onUpdate: "cascade",
+                onDelete: "cascade",
             },
             createdAt: {
                 allowNull: false,

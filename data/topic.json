@@ -1,0 +1,66 @@
+{
+    "topics": [
+        {
+            "name": "Which fictional character do you define your life by?",
+            "TopicCategoryId": 1
+        },
+        {
+            "name": "What's your best childhood memory?",
+            "TopicCategoryId": 1
+        },
+        {
+            "name": "What's an important lesson you recently learned in life?",
+            "TopicCategoryId": 1
+        },
+        {
+            "name": "Would you rather see into the future or see into the past?",
+            "TopicCategoryId": 1
+        },
+        {
+            "name": "When you seek advice, who do you go to for the best information?",
+            "TopicCategoryId": 2
+        },
+        {
+            "name": "What did you think when you first saw me?",
+            "TopicCategoryId": 3
+        },
+        {
+            "name": "What three traits of mine made you fall in love with me?",
+            "TopicCategoryId": 3
+        },
+        {
+            "name": "What's one thing in our relationship that used to bother you, but you've since grown to accept?",
+            "TopicCategoryId": 3
+        },
+        {
+            "name": "How have you changed in the last year? How have I changed?",
+            "TopicCategoryId": 3
+        },
+        {
+            "name": "Which one of these objects reminds you most of me: An umbrella, light bulb, cell phone, loaf of bread, or pencil. Why?",
+            "TopicCategoryId": 1
+        },
+        {
+            "name": "What goals do you have for our relationship?",
+            "TopicCategoryId": 3
+        },
+        {
+            "name": "Should partner supports each other? How should they do it?",
+            "TopicCategoryId": 3
+        }
+    ],
+    "topicCategories": [
+        {
+            "topicCategory": "Life and Lessons",
+            "imgTopic": "https://cdn.memiah.co.uk/uploads/counselling-directory.org.uk/image_gallery/Self-knowledge-1642757233-hero.jpg"
+        },
+        {
+            "topicCategory": "Trust",
+            "imgTopic": "https://cdn.dribbble.com/users/3956332/screenshots/15395283/media/84b2717faf9b93dde85a1e542fb5431f.jpg"
+        },
+        {
+            "topicCategory": "Love and Relationship",
+            "imgTopic": "https://creazilla-store.fra1.digitaloceanspaces.com/cliparts/63143/heart-love-clipart-xl.png"
+        }
+    ]
+}

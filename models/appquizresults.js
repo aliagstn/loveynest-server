@@ -19,14 +19,20 @@ module.exports = (sequelize, DataTypes) => {
     AppQuizResult.init(
         {
             responseUser: {
+                allowNull: false,
                 type: DataTypes.ARRAY(DataTypes.BOOLEAN),
                 validate: {
-                    customValidator() {
-                        if (Array.isArray(this.responseUser) === false) {
-                            throw new Error("Response User must be an array");
+                    notEmpty: { msg: "responseUser cannot be empty" },
+                    notNull: { msg: "responseUser cannot be empty" },
+                    customValidator(responseUser) {
+                        if (responseUser) {
+                            throw { code: 400 };
                         }
-                        if (this.responseUser.length !== 7) {
-                            throw new Error("All questions must be answered");
+                        if (Array.isArray(responseUser) === false) {
+                            throw { msg: "Response User must be an array" };
+                        }
+                        if (responseUser.length !== 7) {
+                            throw { msg: "You must answer all the questions." };
                         }
                     },
                 },

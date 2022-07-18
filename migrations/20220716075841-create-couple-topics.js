@@ -14,10 +14,14 @@ module.exports = {
             TopicId: {
                 type: Sequelize.INTEGER,
                 references: { model: "Topics", key: "id" },
+                onUpdate: "cascade",
+                onDelete: "cascade",
             },
             CoupleId: {
                 type: Sequelize.INTEGER,
                 references: { model: "Couples", key: "id" },
+                onUpdate: "cascade",
+                onDelete: "cascade",
             },
             createdAt: {
                 allowNull: false,

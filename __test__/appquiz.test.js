@@ -7,12 +7,7 @@ let answer = {
     QuizId: 1,
     CoupleId: 1,
 };
-const { exec } = require("child_process");
-beforeAll(() => {
-    exec("npx sequelize-cli --env=test db:seed:all");
-});
 
-afterAll((done) => {});
 describe("AppQuiz Routes Test", () => {
     describe("GET /appquiz/ - get all quiz", () => {
         test("200 - success on get all quiz", (done) => {
@@ -73,12 +68,12 @@ describe("AppQuiz Routes Test", () => {
 
         test("404 - error when getting result with incorrect id", (done) => {
             request(app)
-                .get("/appquiz/result/55")
+                .get("/appquiz/result/99")
                 .end((err, res) => {
                     if (err) return done(err);
                     const { body, status } = res;
                     expect(status).toBe(404);
-                    expect(body).toHaveProperty("message", "User not found");
+                    expect(body).toHaveProperty("message", "Not Found");
                     return done();
                 });
         });
@@ -104,15 +99,128 @@ describe("AppQuiz Routes Test", () => {
                 });
         });
         // test empty response
-
+        test("400 no response", (done) => {
+            request(app)
+                .post("/appquiz/result/")
+                .send({
+                    UserId: 1,
+                    QuizId: 1,
+                    CoupleId: 1,
+                })
+                .end((err, res) => {
+                    if (err) return done(err);
+                    const { body, status } = res;
+                    expect(status).toBe(400);
+                    expect(body).toHaveProperty("message");
+                    expect(Array.isArray(body.message)).toBe(true);
+                    return done();
+                });
+        });
         // test not a couple
-
+        test("403 - wrong couple", (done) => {
+            request(app)
+                .post("/appquiz/result/")
+                .send({
+                    responseUser: [true, false, true, true, true, false, false],
+                    UserId: 3,
+                    CoupleId: 1,
+                    QuizId: 1,
+                })
+                .end((err, res) => {
+                    if (err) return done(err);
+                    const { body, status } = res;
+                    expect(status).toBe(403);
+                    expect(body).toHaveProperty("message", "Forbidden");
+                    return done();
+                });
+        });
+        //test no couple
+        test("404 - wrong couple", (done) => {
+            request(app)
+                .post("/appquiz/result/")
+                .send({
+                    responseUser: [true, false, true, true, true, false, false],
+                    UserId: 3,
+                    QuizId: 1,
+                })
+                .end((err, res) => {
+                    if (err) return done(err);
+                    const { body, status } = res;
+                    expect(status).toBe(404);
+                    expect(body).toHaveProperty("message", "Not Found");
+                    return done();
+                });
+        });
         // test response not boolean
-
+        test("400 - wrong response data  type", (done) => {
+            request(app)
+                .post("/appquiz/result/")
+                .send({
+                    responseUser: [true, false, true, true, true, "talse", "frue"],
+                    UserId: 1,
+                    QuizId: 1,
+                    CoupleId: 1,
+                })
+                .end((err, res) => {
+                    if (err) return done(err);
+                    const { body, status } = res;
+                    expect(status).toBe(400);
+                    expect(body).toHaveProperty("message");
+                    return done();
+                });
+        });
         // test response less than 7
-
+        test("400 - response insufficient / sequelize error", (done) => {
+            request(app)
+                .post("/appquiz/result/")
+                .send({
+                    responseUser: [true, false, true, true, true, false],
+                    UserId: 1,
+                    QuizId: 1,
+                    CoupleId: 1,
+                })
+                .end((err, res) => {
+                    if (err) return done(err);
+                    const { body, status } = res;
+                    expect(status).toBe(400);
+                    expect(body).toHaveProperty("message");
+                    return done();
+                });
+        });
         // test response more than 7
-
+        test("400 - response insufficient / sequelize error", (done) => {
+            request(app)
+                .post("/appquiz/result/")
+                .send({
+                    responseUser: [true, false, true, true, true, false, false, true],
+                    UserId: 1,
+                    QuizId: 1,
+                    CoupleId: 1,
+                })
+                .end((err, res) => {
+                    if (err) return done(err);
+                    const { body, status } = res;
+                    expect(status).toBe(400);
+                    expect(body).toHaveProperty("message");
+                    return done();
+                });
+        });
         // test no user id
+        test("404 - cannot find user ", (done) => {
+            request(app)
+                .post("/appquiz/result/")
+                .send({
+                    responseUser: [true, false, true, true, true, false, false],
+                    QuizId: 1,
+                    CoupleId: 1,
+                })
+                .end((err, res) => {
+                    if (err) return done(err);
+                    const { body, status } = res;
+                    expect(status).toBe(404);
+                    expect(body).toHaveProperty("message", "Not Found");
+                    return done();
+                });
+        });
     });
 });

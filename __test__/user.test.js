@@ -4,7 +4,7 @@ const { User, AppQuiz, AppQuizResult } = require("../models/index");
 
 const user1 = {
     email: "user.test@mail.com",
-    name: "User Test",
+    nickname: "User Test",
     password: "usertest",
 };
 
@@ -30,27 +30,28 @@ describe("User Routes Test", () => {
                 .post("/user/")
                 .send({
                     password: "qweqwe",
+                    nickname: "testnicknameajanih",
                 })
                 .end((err, res) => {
                     if (err) return done(err);
                     const { body, status } = res;
 
                     expect(status).toBe(400);
-                    expect(body).toHaveProperty("message", "Email is required");
+                    expect(body).toHaveProperty("message");
                     return done();
                 });
         });
 
-        test("400 Failed register - should return error if email is already exists", (done) => {
+        test("401 Failed register - should return error if email is already exists", (done) => {
             request(app)
                 .post("/user/")
-                .send(user1)
+                .send({ nickname: "iu", email: "iucantik@mail.com", password: "123456" })
                 .end((err, res) => {
                     if (err) return done(err);
                     const { body, status } = res;
 
-                    expect(status).toBe(400);
-                    expect(body).toHaveProperty("message", "Email must be unique");
+                    expect(status).toBe(401);
+                    expect(body).toHaveProperty("message", "E-mail must be unique");
                     return done();
                 });
         });
@@ -59,16 +60,16 @@ describe("User Routes Test", () => {
             request(app)
                 .post("/user/")
                 .send({
-                    email: "random",
-                    name: "Sample User",
-                    password: "qweqwe",
+                    nickname: "iu",
+                    email: "iucantik@mail",
+                    password: "123456",
                 })
                 .end((err, res) => {
                     if (err) return done(err);
                     const { body, status } = res;
 
                     expect(status).toBe(400);
-                    expect(body).toHaveProperty("message", "Invalid email format");
+                    expect(body).toHaveProperty("message");
                     return done();
                 });
         });

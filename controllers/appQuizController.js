@@ -29,7 +29,7 @@ class AppQuizControl {
                 throw { code: 404 };
             }
 
-            if (couple.UserId1 === UserId || couple.UserId2 === UserId) {
+            if (couple.UserId1 === +UserId || couple.UserId2 === +UserId) {
                 let newResult = { responseUser, QuizId, UserId, CoupleId };
                 const resultQuiz = await AppQuizResult.create(newResult);
                 res.status(201).json(resultQuiz);
