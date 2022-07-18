@@ -1,4 +1,7 @@
 "use strict";
+
+const { encryptPassword } = require("../helpers/bcrypt");
+
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
@@ -21,8 +24,30 @@ module.exports = (sequelize, DataTypes) => {
           args: true,
           msg: "Email already exists",
         },
+        validate: {
+          isEmail: {
+            msg: "Please use email format",
+          },
+          notEmpty: {
+            msg: "Email is required",
+          },
+          notNull: {
+            msg: "Email is required",
+          }
+        }
       },
-      password: DataTypes.STRING,
+      password: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          notEmpty: {
+            msg: "Password is required",
+          },
+          notNull: {
+            msg: "Password is required",
+          }
+        }
+      },
       userCode: DataTypes.STRING,
       partnerCode: DataTypes.STRING,
       photoProfile: DataTypes.STRING,
@@ -46,17 +71,12 @@ module.exports = (sequelize, DataTypes) => {
         instance.userCode = 'LV-' + Math.floor(Math.random() * 10000);
 
       } while (usersCode.indexOf(instance.userCode) !== -1);
-
-      console.log(instance.userCode, '<<<<<<');
     } catch (err) {
       console.log(err);
     }
 
+    instance.password = encryptPassword(instance.password);
   })
-
-  // User.afterUpdate(async (instance) => {
-
-  // })
 
   return User;
 };

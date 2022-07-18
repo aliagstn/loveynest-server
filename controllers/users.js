@@ -1,7 +1,44 @@
 
 const { User, Couple, sequelize } = require('../models');
+const { comparePassword } = require('../helpers/bcrypt');
+const { convertPayloadToToken } = require('../helpers/jwt')
 
 class userController {
+
+  static async loginUser(req, res) {
+    try {
+      const { email, password } = req.body;
+
+      const user = await User.findOne({
+        where: {
+          email,
+        }
+      });
+
+      const passwordVerified = comparePassword(password, user.password);
+
+      if (!passwordVerified) {
+        throw { name: 'userNotFound' }
+      }
+
+      const payload = {
+        id: user.id
+      }
+
+      const access_token = convertPayloadToToken(payload)
+
+      res.status(200).json({
+        message: 'User logged in successfully',
+        data: {
+          nickname: user.nickname,
+          email: user.email,
+          access_token
+        },
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  }
 
   static async addUser(req, res) {
     try {
@@ -109,7 +146,7 @@ class userController {
 
         const user2 = await User.findOne({
           where: {
-            userCode: user1.partnerCode
+            userCode: partnerCode
           }
         })
 
@@ -130,7 +167,7 @@ class userController {
 
         const updatedUser2 = await User.update(
           {
-            partnerCode: user1.partnerCode,
+            partnerCode: user1.userCode,
             CoupleId: newCouple.id
           },
           {
@@ -155,28 +192,66 @@ class userController {
     }
   }
 
-  static async deleteUser(req, res) {
+  static async deletePartnerCode(req, res) {
+    const t = await sequelize.transaction()
     try {
       const { id } = req.params;
 
-      const user = await User.findByPk(id);
+      const user1 = await User.findByPk(id);
 
-      if (user) {
-        const deleted = await User.destroy({
+      const couple = await Couple.findOne({
+        where: {
+          id: user1.CoupleId
+        }
+      })
+
+      const updatedUser1 = await User.update({
+        partnerCode: null
+      }, {
+        where: {
+          id
+        },
+        returning: true,
+      }, { transaction: t });
+
+      const user2 = await User.findOne({
+        where: {
+          CoupleId: user1.CoupleId
+        }
+      })
+
+      const updateCoupleIdUser1 = await User.update(
+        {
+          CoupleId: null
+        },
+        {
           where: {
-            id
+            id,
           }
-        });
+        })
 
-        res.status(200).json({
-          message: 'User deleted successfully',
-          data: deleted,
-        });
-      } else {
-        res.status(404).json({
-          message: 'User not found',
-        });
-      }
+      const updatedUser2 = await User.update(
+        {
+          partnerCode: null,
+          CoupleId: null
+        },
+        {
+          where: {
+            id: user2.id
+          }
+        })
+
+      const deleteCouple = await Couple.destroy({
+        where: {
+          id: couple.id
+        }
+      })
+
+      await t.commit();
+
+      res.status(200).json({
+        message: 'partnerCode deleted successfully',
+      });
     } catch (err) {
       console.log(err);
     }
@@ -187,6 +262,10 @@ class userController {
       const { id } = req.params;
 
       const couple = await Couple.findByPk(id);
+
+      if (!couple) {
+        throw { name: 'coupleNotFound' }
+      }
 
       const deleted = await Couple.destroy({
         where: {
