@@ -5,10 +5,7 @@ class AppQuizControl {
     static async getAppQuiz(req, res, next) {
         try {
             const quizList = await AppQuiz.findAll();
-            res.status(200).json({
-                statusCode: 200,
-                quizList,
-            });
+            res.status(200).json(quizList);
         } catch (err) {
             console.log(err);
             res.status(500).json({
@@ -20,15 +17,11 @@ class AppQuizControl {
     static async createResult(req, res, next) {
         try {
             const QuizId = 1;
-            const { responseUser, UserId, coupleId } = req.body;
-            console.log(req.body);
-            let newResult = { responseUser, QuizId, UserId, coupleId };
+            const { responseUser, UserId, CoupleId } = req.body;
+            let newResult = { responseUser, QuizId, UserId, CoupleId };
             const resultQuiz = await AppQuizResult.create(newResult);
 
-            res.status(201).json({
-                statusCode: 201,
-                resultQuiz,
-            });
+            res.status(201).json(resultQuiz);
         } catch (err) {
             console.log(err);
             res.status(500).json({
@@ -44,10 +37,7 @@ class AppQuizControl {
                 order: [["id", "ASC"]],
             });
 
-            res.status(200).json({
-                statusCode: 200,
-                resultList,
-            });
+            res.status(200).json(resultList);
         } catch (err) {
             console.log(err);
             res.status(500).json({
@@ -67,9 +57,7 @@ class AppQuizControl {
                 limit: 7,
             });
 
-            res.status(200).json({
-                resultByIdList,
-            });
+            res.status(200).json(resultByIdList);
         } catch (err) {
             console.log(err);
             res.status(500).json({

@@ -20,6 +20,7 @@ module.exports = (sequelize, DataTypes) => {
         {
             responseUser: DataTypes.ARRAY(DataTypes.BOOLEAN),
             QuizId: DataTypes.INTEGER,
+            UserId: DataTypes.INTEGER,
             CoupleId: DataTypes.INTEGER,
         },
         {
