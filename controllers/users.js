@@ -41,15 +41,11 @@ class userController {
 
   static async addUser(req, res) {
     try {
-      const { nickname, email, password, userCode, partnerCode, photoProfile } = req.body;
+      const { email, password } = req.body;
 
       const newUser = await User.create({
-        nickname,
         email,
         password,
-        userCode,
-        partnerCode,
-        photoProfile
       });
 
       res.status(201).json({
@@ -263,8 +259,6 @@ class userController {
       console.log(err);
     }
   }
-
-
 
   static async deleteCouple(req, res) {
     try {

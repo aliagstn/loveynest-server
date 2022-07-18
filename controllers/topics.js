@@ -3,11 +3,32 @@ const { Topic, CoupleTopic, TopicCategory } = require('../models');
 class topicController {
   static async getAllTopics(req, res) {
     try {
-      const topics = await Topic.findAll();
+
+      const coupleTopics = await CoupleTopic.findAll({
+        where: { CoupleId: req.user.CoupleId }
+      })
+
+      const coupleTopicsId = coupleTopics.map(coupleTopic => coupleTopic.TopicId);
+
+      const topics = await Topic.findAll()
+      const topicsId = topics.map(topic => topic.id)
+
+      let randomTopics = topicsId.filter(topic => !coupleTopicsId.includes(topic));
+
+      let threeTopics = [];
+      for (let i = 0; i < 3; i++) {
+        let random = Math.floor(Math.random() * randomTopics.length);
+        threeTopics.push(randomTopics[random]);
+        randomTopics.splice(random, 1);
+      }
+
+      const threeRandomTopics = await Topic.findAll({
+        where: { id: threeTopics }
+      });
 
       res.status(200).json({
         message: 'Topics retrieved successfully',
-        data: topics,
+        data: threeRandomTopics,
       });
     } catch (err) {
       console.log(err);
@@ -62,6 +83,8 @@ class topicController {
     try {
       const { status, TopicId } = req.body;
       const { CoupleId } = req.user
+
+      console.log(CoupleId);
 
       const newCoupleTopic = await CoupleTopic.create({
         status,

@@ -1,8 +1,9 @@
 const express = require('express');
 const routerTopics = express.Router();
 const topicController = require('../controllers/topics');
+const userAuthentication = require('../middlewares/userAuthentication');
 
-routerTopics.get('/', topicController.getAllTopics);
+routerTopics.get('/', userAuthentication, topicController.getAllTopics);
 
 routerTopics.post('/', topicController.addTopic)
 
