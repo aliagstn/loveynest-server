@@ -63,7 +63,9 @@ class userController {
 
   static async getAllUsers(req, res) {
     try {
-      const users = await User.findAll();
+      const users = await User.findAll({
+        attributes: { exclude: ['password'] }
+      });
 
       res.status(200).json({
         message: 'Users retrieved successfully',
@@ -78,7 +80,11 @@ class userController {
     try {
       const { id } = req.params;
 
-      const user = await User.findByPk(id);
+      const user = await User.findByPk(id, {
+        attributes: {
+          exclude: ['password']
+        }
+      });
 
       res.status(200).json({
         message: 'User retrieved successfully',
@@ -103,15 +109,19 @@ class userController {
         },
           {
             where: {
-              id
+              id,
             },
             returning: true,
-          }
+          },
         );
 
         res.status(200).json({
           message: 'User updated successfully',
-          data: updated,
+          data: {
+            id: updated[1][0].id,
+            nickname: updated[1][0].nickname,
+            photoProfile: updated[1][0].photoProfile,
+          },
         });
       } else {
         res.status(404).json({
