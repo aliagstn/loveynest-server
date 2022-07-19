@@ -59,10 +59,11 @@ class QuizController {
         const t = await sequelize.transaction();
 
         try {
-            const AuthorId = req.user.id; //? didapat dari authN
+            let AuthorId = req.user.id; //? didapat dari authN
+            AuthorId = +AuthorId;
+            const user = await User.findByPk(+req.user.id, { transaction: t });
 
-            const user = User.findByPk(+req.user.id, { transaction: t });
-            const CoupleId = user.CoupleId;
+            const CoupleId = +user.CoupleId;
 
             if (!AuthorId || !CoupleId) {
                 throw { code: 400 };
@@ -98,7 +99,6 @@ class QuizController {
                 status: "",
                 totalPoint: 0,
             };
-            console.log(inputQuiz);
             const [userQuiz, create] = await UserQuiz.findOrCreate({
                 where: inputQuiz,
                 transaction: t,
@@ -126,7 +126,6 @@ class QuizController {
             }
         } catch (error) {
             t.rollback();
-            console.log(error);
             next(error);
         }
     }

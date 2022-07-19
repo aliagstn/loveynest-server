@@ -34,7 +34,6 @@ describe("User Routes Test", () => {
                     return done();
                 })
                 .catch((err) => {
-                    console.log(err);
                     done(err);
                 });
         });
@@ -54,7 +53,6 @@ describe("User Routes Test", () => {
                     return done();
                 })
                 .catch((err) => {
-                    console.log(err);
                     done(err);
                 });
         });
@@ -71,7 +69,6 @@ describe("User Routes Test", () => {
                     return done();
                 })
                 .catch((err) => {
-                    console.log(err);
                     done(err);
                 });
         });
@@ -92,7 +89,6 @@ describe("User Routes Test", () => {
                     return done();
                 })
                 .catch((err) => {
-                    console.log(err);
                     done(err);
                 });
         });
@@ -114,7 +110,6 @@ describe("User Routes Test", () => {
                     return done();
                 })
                 .catch((err) => {
-                    console.log(err);
                     done(err);
                 });
         });
@@ -134,7 +129,6 @@ describe("User Routes Test", () => {
                     return done();
                 })
                 .catch((err) => {
-                    console.log(err);
                     done(err);
                 });
         });
@@ -153,7 +147,6 @@ describe("User Routes Test", () => {
                     return done();
                 })
                 .catch((err) => {
-                    console.log(err);
                     done(err);
                 });
         });
@@ -172,7 +165,6 @@ describe("User Routes Test", () => {
                     return done();
                 })
                 .catch((err) => {
-                    console.log(err);
                     done(err);
                 });
         });
@@ -192,7 +184,6 @@ describe("User Routes Test", () => {
                     return done();
                 })
                 .catch((err) => {
-                    console.log(err);
                     done(err);
                 });
         });
@@ -214,7 +205,6 @@ describe("User Routes Test", () => {
                     return done();
                 })
                 .catch((err) => {
-                    console.log(err);
                     done(err);
                 });
         });
@@ -230,7 +220,6 @@ describe("User Routes Test", () => {
                     return done();
                 })
                 .catch((err) => {
-                    console.log(err);
                     done(err);
                 });
         });
@@ -250,7 +239,6 @@ describe("User Routes Test", () => {
                     return done();
                 })
                 .catch((err) => {
-                    console.log(err);
                     done(err);
                 });
         });
@@ -265,7 +253,6 @@ describe("User Routes Test", () => {
                     return done();
                 })
                 .catch((err) => {
-                    console.log(err);
                     done(err);
                 });
         });
@@ -289,7 +276,6 @@ describe("User Routes Test", () => {
                     return done();
                 })
                 .catch((err) => {
-                    console.log(err);
                     done(err);
                 });
         });
@@ -305,7 +291,6 @@ describe("User Routes Test", () => {
                     return done();
                 })
                 .catch((err) => {
-                    console.log(err);
                     done(err);
                 });
         });
@@ -320,7 +305,6 @@ describe("User Routes Test", () => {
                     return done();
                 })
                 .catch((err) => {
-                    console.log(err);
                     done(err);
                 });
         });
@@ -337,7 +321,6 @@ describe("User Routes Test", () => {
                     return done();
                 })
                 .catch((err) => {
-                    console.log(err);
                     done(err);
                 });
         });
@@ -355,23 +338,21 @@ describe("User Routes Test", () => {
                     return done();
                 })
                 .catch((err) => {
-                    console.log(err);
                     done(err);
                 });
         });
-        test("403 - wrong access_token", (done) => {
+        test("400 - wrong access_token", (done) => {
             request(app)
                 .patch("/users/input/5")
                 .send({ partnerCode: "LV-2345" })
                 .set("access_token", token)
                 .then((res) => {
                     const { status, body } = res;
-                    expect(status).toBe(401);
-                    expect(body).toHaveProperty("message", "Invalid access token");
+                    expect(status).toBe(400);
+                    expect(body).toHaveProperty("message", "Bad Request");
                     return done();
                 })
                 .catch((err) => {
-                    console.log(err);
                     done(err);
                 });
         });
@@ -386,7 +367,6 @@ describe("User Routes Test", () => {
                     return done();
                 })
                 .catch((err) => {
-                    console.log(err);
                     done(err);
                 });
         });
@@ -419,7 +399,6 @@ describe("User Routes Test", () => {
                     return done();
                 })
                 .catch((err) => {
-                    console.log(err);
                     done(err);
                 });
         });
@@ -435,7 +414,6 @@ describe("User Routes Test", () => {
                     return done();
                 })
                 .catch((err) => {
-                    console.log(err);
                     done(err);
                 });
         });
@@ -451,7 +429,6 @@ describe("User Routes Test", () => {
                     return done();
                 })
                 .catch((err) => {
-                    console.log(err);
                     done(err);
                 });
         });
@@ -468,7 +445,6 @@ describe("User Routes Test", () => {
                     return done();
                 })
                 .catch((err) => {
-                    console.log(err);
                     done(err);
                 });
         });
@@ -483,7 +459,6 @@ describe("User Routes Test", () => {
                     return done();
                 })
                 .catch((err) => {
-                    console.log(err);
                     done(err);
                 });
         });
@@ -499,7 +474,6 @@ describe("User Routes Test", () => {
                     return done();
                 })
                 .catch((err) => {
-                    console.log(err);
                     done(err);
                 });
         });
@@ -510,13 +484,11 @@ describe("User Routes Test", () => {
                 .set("access_token", user5token)
                 .then((res) => {
                     const { status, body } = res;
-                    console.log(status, body, "<----------------------------");
                     expect(status).toBe(200);
                     expect(body).toHaveProperty("message", "partnerCode deleted successfully");
                     return done();
                 })
                 .catch((err) => {
-                    console.log(err);
                     done(err);
                 });
         });
@@ -530,12 +502,10 @@ describe("User Routes Test", () => {
                 .attach("img", "./data/testingasset.png")
                 .then((res) => {
                     const { status, body } = res;
-                    console.log(status, body);
                     expect(status).toBe(201);
                     return done();
                 })
                 .catch((err) => {
-                    console.log(err);
                     next(err);
                 });
         });
@@ -554,7 +524,6 @@ describe("User Routes Test", () => {
                     return done();
                 })
                 .catch((err) => {
-                    console.log(err);
                     next(err);
                 });
         });

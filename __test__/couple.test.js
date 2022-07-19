@@ -5,15 +5,17 @@ const { Couple } = require("../models/index");
 beforeEach(() => {
     jest.restoreAllMocks();
 });
+const token =
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNjU4MjQ4MjE2fQ.bIzM9ZHbDgjlocFMYJITQ_2nL7qVe8yl1x0WI-IH-S4";
 
 describe("Couple Routes Test", () => {
     describe("GET /couples/ - get all couple", () => {
         test("200 - success on get all couple", (done) => {
             request(app)
                 .get("/couples")
+                .set("access_token", token)
                 .then((res) => {
                     const { body, status } = res;
-                    console.log(body, status, "<--- body status");
                     expect(status).toBe(200);
                     expect(Array.isArray(body)).toBe(true);
                     body.forEach((el) => {
@@ -24,7 +26,6 @@ describe("Couple Routes Test", () => {
                     return done();
                 })
                 .catch((err) => {
-                    console.log(err);
                     done(err);
                 });
         });
@@ -33,6 +34,7 @@ describe("Couple Routes Test", () => {
             jest.spyOn(Couple, "findAll").mockRejectedValue("Error");
             request(app)
                 .get("/couples/")
+                .set("access_token", token)
                 .then((res) => {
                     const { body, status } = res;
                     expect(status).toBe(500);
@@ -40,7 +42,6 @@ describe("Couple Routes Test", () => {
                     return done();
                 })
                 .catch((err) => {
-                    console.log(err);
                     done(err);
                 });
         });
@@ -50,6 +51,7 @@ describe("Couple Routes Test", () => {
         test("200 - success on get one couple", (done) => {
             request(app)
                 .get("/couples/1")
+                .set("access_token", token)
                 .then((res) => {
                     const { body, status } = res;
                     expect(status).toBe(200);
@@ -68,7 +70,6 @@ describe("Couple Routes Test", () => {
                     return done();
                 })
                 .catch((err) => {
-                    console.log(err);
                     done(err);
                 });
         });
@@ -77,6 +78,7 @@ describe("Couple Routes Test", () => {
     test("404 - wrong couple id on get one couple", (done) => {
         request(app)
             .get("/couples/555")
+            .set("access_token", token)
             .then((res) => {
                 const { body, status } = res;
                 expect(status).toBe(404);
@@ -84,7 +86,6 @@ describe("Couple Routes Test", () => {
                 return done();
             })
             .catch((err) => {
-                console.log(err);
                 done(err);
             });
     });
