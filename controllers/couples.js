@@ -38,6 +38,30 @@ class coupleController {
       console.log(err);
     }
   }
+
+  static async annivDate(req, res) {
+    try {
+      const { id } = req.params;
+      const { anniversaryDate } = req.body;
+      const couple = await Couple.update({
+        anniversaryDate
+      }, {
+        where: {
+          id
+        },
+        returning: true,
+      });
+
+      couple.anniversaryDate = f
+
+      res.status(200).json({
+        message: 'Anniversary date updated successfully',
+        data: couple,
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  }
 }
 
 module.exports = coupleController;
