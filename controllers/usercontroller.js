@@ -223,113 +223,115 @@ class userController {
     }
 
     static async deletePartnerCode(req, res) {
-        const t = await sequelize.transaction()
+        const t = await sequelize.transaction();
         try {
-          const { id } = req.params;
-    
-          const user1 = await User.findByPk(id);
-    
-          const couple = await Couple.findOne({
-            where: {
-              id: user1.CoupleId
-            }
-          })
-    
-          const updatedUser1 = await User.update({
-            partnerCode: null
-          }, {
-            where: {
-              id
-            },
-            returning: true,
-          }, { transaction: t });
-    
-          const user2 = await User.findOne({
-            where: {
-              CoupleId: user1.CoupleId
-            }
-          })
-    
-          const updateCoupleIdUser1 = await User.update(
-            {
-              CoupleId: null
-            },
-            {
-              where: {
-                id,
-              }
-            })
-    
-          const updatedUser2 = await User.update(
-            {
-              partnerCode: null,
-              CoupleId: null
-            },
-            {
-              where: {
-                id: user2.id
-              }
-            })
-    
-          const deleteCouple = await Couple.destroy({
-            where: {
-              id: couple.id
-            }
-          })
-    
-          await t.commit();
-    
-          res.status(200).json({
-            message: 'partnerCode deleted successfully',
-          });
+            const { id } = req.params;
+
+            const user1 = await User.findByPk(id);
+
+            const couple = await Couple.findOne({
+                where: {
+                    id: user1.CoupleId,
+                },
+            });
+
+            const updatedUser1 = await User.update(
+                {
+                    partnerCode: null,
+                },
+                {
+                    where: {
+                        id,
+                    },
+                    returning: true,
+                },
+                { transaction: t }
+            );
+
+            const user2 = await User.findOne({
+                where: {
+                    CoupleId: user1.CoupleId,
+                },
+            });
+
+            const updateCoupleIdUser1 = await User.update(
+                {
+                    CoupleId: null,
+                },
+                {
+                    where: {
+                        id,
+                    },
+                }
+            );
+
+            const updatedUser2 = await User.update(
+                {
+                    partnerCode: null,
+                    CoupleId: null,
+                },
+                {
+                    where: {
+                        id: user2.id,
+                    },
+                }
+            );
+
+            const deleteCouple = await Couple.destroy({
+                where: {
+                    id: couple.id,
+                },
+            });
+
+            await t.commit();
+
+            res.status(200).json({
+                message: "partnerCode deleted successfully",
+            });
         } catch (err) {
-          console.log(err);
+            console.log(err);
         }
-      }
-    
-    
-    
-      static async deleteCouple(req, res) {
+    }
+
+    static async deleteCouple(req, res) {
         try {
-          const { id } = req.params;
-    
-          const couple = await Couple.findByPk(id);
-    
-          if (!couple) {
-            throw { name: 'coupleNotFound' }
-          }
-    
-          const deleted = await Couple.destroy({
-            where: {
-              id
-            },
-            returning: true,
-          });
-    
-          res.status(200).json({
-            message: 'Couple deleted successfully',
-            data: deleted,
-          });
+            const { id } = req.params;
+
+            const couple = await Couple.findByPk(id);
+
+            if (!couple) {
+                throw { name: "coupleNotFound" };
+            }
+
+            const deleted = await Couple.destroy({
+                where: {
+                    id,
+                },
+                returning: true,
+            });
+
+            res.status(200).json({
+                message: "Couple deleted successfully",
+                data: deleted,
+            });
         } catch (err) {
-          console.log(err);
+            console.log(err);
         }
-      }
-    
-    
-    
-      //TAMBAHAN DARI ALIA DARI SINIII
-      static async postToCloudinary(req, res){
+    }
+
+    //TAMBAHAN DARI ALIA DARI SINIII
+    static async postToCloudinary(req, res) {
         try {
-            const {img} = await req.body
+            const { img } = await req.body;
             const uploadedResponse = await cloudinary.uploader.upload(img, {
-                upload_preset: 'ml_default'
-            })
-            res.status(201).json(uploadedResponse)
+                upload_preset: "ml_default",
+            });
+            res.status(201).json(uploadedResponse);
         } catch (error) {
-            res.status(500).json(error)
+            res.status(500).json(error);
             console.error();
         }
-      }
+    }
 }
 
 module.exports = userController;

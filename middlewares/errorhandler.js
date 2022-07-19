@@ -7,6 +7,7 @@ const errorHandler = (err, req, res, next) => {
     if (name === "SequelizeValidationError") {
         code = 400;
         message = err.message.split(",");
+        console.log(message, "<-- message");
     } else if (name === "SequelizeUniqueConstraintError") {
         code = 401;
         message = "E-mail must be unique";

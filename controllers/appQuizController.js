@@ -12,12 +12,12 @@ class AppQuizControl {
     }
 
     static async createResult(req, res, next) {
+        const t = await sequelize.transaction();
         try {
-            const t = await sequelize.transaction();
             const QuizId = 1;
             const { responseUser, UserId, CoupleId } = req.body;
 
-            const user = User.findByPk(UserId, { transaction: t });
+            const user = await User.findByPk(UserId, { transaction: t });
 
             if (!user) {
                 throw { code: 404 };
@@ -31,12 +31,14 @@ class AppQuizControl {
 
             if (couple.UserId1 === +UserId || couple.UserId2 === +UserId) {
                 let newResult = { responseUser, QuizId, UserId, CoupleId };
-                const resultQuiz = await AppQuizResult.create(newResult);
+                const resultQuiz = await AppQuizResult.create(newResult, { transaction: t });
+                await t.commit();
                 res.status(201).json(resultQuiz);
             } else {
                 throw { code: 403 };
             }
         } catch (err) {
+            await t.rollback();
             next(err);
         }
     }
@@ -57,13 +59,15 @@ class AppQuizControl {
     static async getResultByUser(req, res, next) {
         try {
             const userId = +req.params.id;
+            console.log(userId);
             const user = await User.findOne({
                 where: {
                     id: userId,
                 },
             });
-
+            console.log(user, "<- user");
             if (!user) {
+                console.log("dalam user");
                 throw { code: 404 };
             }
 
@@ -77,6 +81,7 @@ class AppQuizControl {
 
             res.status(200).json(resultByIdList);
         } catch (err) {
+            console.log(err);
             next(err);
         }
     }
