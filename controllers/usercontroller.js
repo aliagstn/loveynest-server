@@ -33,7 +33,6 @@ class userController {
     static async loginUser(req, res, next) {
         try {
             const { email, password } = req.body;
-
             const user = await User.findOne({
                 where: {
                     email,
@@ -51,9 +50,9 @@ class userController {
             const payload = {
                 id: user.id,
             };
-
+            
             const access_token = convertPayloadToToken(payload);
-
+            console.log(access_token)
             res.status(200).json({
                 message: "User logged in successfully",
                 data: {
@@ -349,7 +348,7 @@ class userController {
     }
 
     //TAMBAHAN DARI ALIA DARI SINIII
-    static async postToCloudinary(req, res) {
+    static async postToCloudinary(req, res, next) {
         try {
             const { img } = await req.body;
             const uploadedResponse = await cloudinary.uploader.upload(img, {

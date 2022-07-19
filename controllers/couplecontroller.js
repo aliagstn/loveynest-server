@@ -1,5 +1,6 @@
 "use strict";
 const { Couple, User } = require("../models");
+const {Op} = require("sequelize")
 class CoupleController {
     static async getAllCouples(req, res, next) {
         try {
@@ -29,7 +30,37 @@ class CoupleController {
             if (!couple) {
                 throw { code: 404 };
             }
+            console.log(couple)
+            res.status(200).json(couple);
+        } catch (err) {
+            next(err);
+        }
+    }
+    static async findMyPartner(req, res, next) {
+        try {
+            const { id, UserId } = req.params;
+            console.log(req.params)
+            const couple = await Couple.findOne({
+                where: {
+                    id,
+                },
+                include: {
+                    model: User,
+                    where:{
+                        id: {
+                            [Op.not]: +UserId
+                        }
+                    },
+                    attributes: {
+                        exclude: ["password"],
+                    },
+                },
+            });
 
+            if (!couple) {
+                throw { code: 404 };
+            }
+            console.log(couple, "find my partner")
             res.status(200).json(couple);
         } catch (err) {
             next(err);
