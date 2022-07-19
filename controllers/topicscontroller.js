@@ -6,6 +6,7 @@ class TopicController {
             const coupleTopics = await CoupleTopic.findAll({
                 where: { CoupleId: req.user.CoupleId },
             });
+            console.log(req.user)
 
             const coupleTopicsId = coupleTopics.map((coupleTopic) => coupleTopic.TopicId);
 
@@ -24,7 +25,7 @@ class TopicController {
             const threeRandomTopics = await Topic.findAll({
                 where: { id: threeTopics },
             });
-
+            console.log(threeRandomTopics)
             res.status(200).json(threeRandomTopics);
         } catch (err) {
             next(err);

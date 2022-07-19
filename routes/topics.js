@@ -1,8 +1,16 @@
-const router = require("express").Router();
-const TopicController = require("../controllers/topicscontroller");
-router.get("/", TopicController.getAllTopics);
-router.post("/", TopicController.addTopic);
-router.get("/:id", TopicController.getTopicById);
-router.put("/:id", TopicController.updateTopic);
-router.delete("/:id", TopicController.deleteTopic);
-module.exports = router;
+const express = require('express');
+const routerTopics = express.Router();
+const topicController = require('../controllers/topicscontroller');
+const userAuthentication = require('../middlewares/userAuthentication');
+
+routerTopics.get('/', userAuthentication, topicController.getAllTopics);
+
+routerTopics.post('/', topicController.addTopic)
+
+routerTopics.get('/:id', topicController.getTopicById)
+
+routerTopics.put('/:id', topicController.updateTopic)
+
+routerTopics.delete('/:id', topicController.deleteTopic)
+
+module.exports = routerTopics 
