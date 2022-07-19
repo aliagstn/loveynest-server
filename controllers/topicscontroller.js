@@ -1,4 +1,4 @@
-const { Topic, CoupleTopic, TopicCategory } = require("../models");
+const { Topic, CoupleTopic, TopicCategory, sequelize } = require("../models");
 
 class TopicController {
     static async getAllTopics(req, res, next) {
