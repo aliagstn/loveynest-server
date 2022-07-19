@@ -2,7 +2,8 @@ const router = require("express").Router();
 const userController = require("../controllers/usercontroller");
 const userAuthentication = require("../middlewares/userauthentication");
 
-router.post("/", userController.addUser);
+router.post("/", userController.loginUser);
+router.post("/register", userController.addUser);
 // router.use(userAuthentication);
 router.get("/", userController.getAllUsers);
 router.get("/:id", userController.getUserById);
