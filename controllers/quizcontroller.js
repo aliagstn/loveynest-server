@@ -1,7 +1,7 @@
 "use strict";
 
 const { query } = require("express");
-const { UserQuiz, UserQuestion, QuizCategory, sequelize } = require("../models");
+const { User, UserQuiz, UserQuestion, QuizCategory, sequelize } = require("../models");
 
 class QuizController {
     //* READ ALL QUIZ (/quizes)
@@ -59,8 +59,10 @@ class QuizController {
         const t = await sequelize.transaction();
 
         try {
-            const AuthorId = 1; //? didapat dari authN
-            const CoupleId = 1; //? didapat dari authN
+            const AuthorId = req.user.id; //? didapat dari authN
+
+            const user = User.findByPk(+req.user.id, { transaction: t });
+            const CoupleId = user.CoupleId;
 
             if (!AuthorId || !CoupleId) {
                 throw { code: 400 };
