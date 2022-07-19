@@ -66,7 +66,7 @@ module.exports = (sequelize, DataTypes) => {
                         });
                         instance.userCode;
                         do {
-                            instance.userCode = Math.floor(Math.random() * 1000000);
+                            instance.userCode = "LV" + Math.floor(Math.random() * 10000);
                         } while (usersCode.indexOf(instance.userCode) !== -1);
                     } catch (err) {
                         console.log(err);

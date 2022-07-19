@@ -25,9 +25,11 @@ class CoupleController {
                     },
                 },
             });
+
             if (!couple) {
                 throw { code: 404 };
             }
+
             res.status(200).json(couple);
         } catch (err) {
             next(err);
