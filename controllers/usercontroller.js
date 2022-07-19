@@ -103,12 +103,13 @@ class userController {
 
     // update user detail
     static async updateUser(req, res, next) {
+        const t = await sequelize.transaction();
         try {
             const { id } = req.params;
             const { nickname, photoProfile } = req.body;
-            console.log(id);
-            const user = await User.findByPk(id);
-            console.log(user);
+
+            const user = await User.findByPk(id, { transaction: t });
+
             if (user) {
                 const updated = await User.update(
                     {
@@ -120,9 +121,10 @@ class userController {
                             id,
                         },
                         returning: true,
-                    }
+                    },
+                    { transaction: t }
                 );
-
+                await t.commit();
                 res.status(200).json({
                     message: "User updated successfully",
                     data: {
@@ -136,7 +138,7 @@ class userController {
                 throw { code: 404 };
             }
         } catch (err) {
-            console.log(err);
+            await t.rollback();
             next(err);
         }
     }
@@ -152,6 +154,7 @@ class userController {
             if (partnerCode === user1.userCode) {
                 throw { code: 404 };
             }
+
             if (user1.coupleId) {
                 throw { code: 404 };
             }
@@ -228,7 +231,7 @@ class userController {
                         userCode: partnerCode,
                     },
                 });
-                console.log(user2);
+                await t.rollback();
                 res.status(400).json({
                     message: "You already have a partner",
                     partnerData: user2,
@@ -307,33 +310,39 @@ class userController {
                 message: "partnerCode deleted successfully",
             });
         } catch (err) {
-            console.log(err);
+            await t.rollback();
+            next(err);
         }
     }
 
     static async deleteCouple(req, res) {
+        const t = await sequelize.transaction();
         try {
             const { id } = req.params;
 
-            const couple = await Couple.findByPk(id);
+            const couple = await Couple.findByPk(id, { transaction: t });
 
             if (!couple) {
                 throw { name: "coupleNotFound" };
             }
 
-            const deleted = await Couple.destroy({
-                where: {
-                    id,
+            const deleted = await Couple.destroy(
+                {
+                    where: {
+                        id,
+                    },
+                    returning: true,
                 },
-                returning: true,
-            });
+                { transaction: t }
+            );
 
+            await t.commit();
             res.status(200).json({
                 message: "Couple deleted successfully",
                 data: deleted,
             });
         } catch (err) {
-            console.log(err);
+            await t.rollback();
         }
     }
 
@@ -346,8 +355,7 @@ class userController {
             });
             res.status(201).json(uploadedResponse);
         } catch (error) {
-            res.status(500).json(error);
-            console.error();
+            next(error);
         }
     }
 }

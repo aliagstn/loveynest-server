@@ -57,31 +57,36 @@ class AppQuizControl {
     }
 
     static async getResultByUser(req, res, next) {
+        const t = await sequelize.transaction();
         try {
             const userId = +req.params.id;
-            console.log(userId);
-            const user = await User.findOne({
-                where: {
-                    id: userId,
+            const user = await User.findOne(
+                {
+                    where: {
+                        id: userId,
+                    },
                 },
-            });
-            console.log(user, "<- user");
+                { transaction: t }
+            );
+
             if (!user) {
-                console.log("dalam user");
                 throw { code: 404 };
             }
 
-            const resultByIdList = await AppQuizResult.findAll({
-                where: {
-                    UserId: userId,
+            const resultByIdList = await AppQuizResult.findAll(
+                {
+                    where: {
+                        UserId: userId,
+                    },
+                    order: [["id", "DESC"]],
+                    limit: 7,
                 },
-                order: [["id", "DESC"]],
-                limit: 7,
-            });
-
+                { transaction: t }
+            );
+            await t.commit();
             res.status(200).json(resultByIdList);
         } catch (err) {
-            console.log(err);
+            await t.rollback();
             next(err);
         }
     }

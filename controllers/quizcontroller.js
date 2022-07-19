@@ -75,10 +75,12 @@ class QuizController {
                 totalPoint: 0,
             };
 
-            const [userQuiz, create] = await UserQuiz.findOrCreate({
-                where: inputQuiz,
-                transaction: t,
-            });
+            const [userQuiz, create] = await UserQuiz.findOrCreate(
+                {
+                    where: inputQuiz,
+                },
+                { transaction: t }
+            );
 
             if (!create) {
                 throw { name: "QUIZ_ALLREADY_EXIST" };
@@ -96,7 +98,8 @@ class QuizController {
                 await t.commit();
 
                 res.status(201).json({
-                    message: "Quizz create successfully",
+                    message: "Quiz create successfully",
+                    userQuestions,
                 });
             }
         } catch (error) {

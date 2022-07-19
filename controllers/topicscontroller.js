@@ -2,38 +2,40 @@ const { Topic, CoupleTopic, TopicCategory } = require("../models");
 
 class TopicController {
     static async getAllTopics(req, res, next) {
+        const t = await sequelize.transaction();
         try {
-            const coupleTopics = await CoupleTopic.findAll({
-                where: { CoupleId: req.user.CoupleId },
-            });
+            const coupleTopics = await CoupleTopic.findAll(
+                {
+                    where: { CoupleId: req.user.CoupleId },
+                },
+                { transaction: t }
+            );
 
             const coupleTopicsId = coupleTopics.map((coupleTopic) => coupleTopic.TopicId);
 
-            // console.log(coupleTopicsId);
-
-            const topics = await Topic.findAll();
+            const topics = await Topic.findAll({ transaction: t });
             const topicsId = topics.map((topic) => topic.id);
 
             let filteredTopics = topicsId.filter((topic) => !coupleTopicsId.includes(topic));
 
-            // console.log(filteredTopics);
-
             let threeTopics = [];
             for (let i = 0; i < 3; i++) {
                 let random = Math.floor(Math.random() * filteredTopics.length);
-                // console.log(random, '<<< random');
+
                 threeTopics.push(filteredTopics[random]);
                 filteredTopics.splice(random, 1);
             }
 
-            // console.log(threeTopics);
-
-            const threeRandomTopics = await Topic.findAll({
-                where: { id: threeTopics },
-            });
-
+            const threeRandomTopics = await Topic.findAll(
+                {
+                    where: { id: threeTopics },
+                },
+                { transaction: t }
+            );
+            await t.commit();
             res.status(200).json(threeRandomTopics);
         } catch (err) {
+            await t.rollback();
             next(err);
         }
     }
@@ -151,7 +153,7 @@ class TopicController {
                     TopicCategoryId,
                 },
                 {
-                    where: { id },
+                    where: { id: +id },
                 }
             );
 
@@ -170,8 +172,8 @@ class TopicController {
             const updatedCoupleTopic = await CoupleTopic.update(
                 {
                     status,
-                    TopicId,
-                    CoupleId,
+                    TopicId: +TopicId,
+                    CoupleId: +CoupleId,
                 },
                 {
                     where: { id },
@@ -194,7 +196,7 @@ class TopicController {
                     topicCategory,
                 },
                 {
-                    where: { id },
+                    where: { id: +id },
                 }
             );
 
@@ -209,7 +211,7 @@ class TopicController {
             const { id } = req.params;
 
             const deletedTopic = await Topic.destroy({
-                where: { id },
+                where: { id: +id },
             });
 
             res.status(200).json(deletedTopic);
@@ -223,7 +225,7 @@ class TopicController {
             const { id } = req.params;
 
             const deletedCoupleTopic = await CoupleTopic.destroy({
-                where: { id },
+                where: { id: +id },
             });
 
             res.status(200).json({
@@ -239,7 +241,7 @@ class TopicController {
             const { id } = req.params;
 
             const deletedCategory = await TopicCategory.destroy({
-                where: { id },
+                where: { id: +id },
             });
 
             res.status(200).json({
