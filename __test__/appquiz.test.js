@@ -8,6 +8,11 @@ let answer = {
     CoupleId: 1,
 };
 
+jest.useFakeTimers("legacy");
+beforeEach(() => {
+    jest.restoreAllMocks();
+});
+
 describe("AppQuiz Routes Test", () => {
     describe("GET /appquiz/ - get all quiz", () => {
         test("200 - success on get all quiz", (done) => {
@@ -23,6 +28,19 @@ describe("AppQuiz Routes Test", () => {
                         expect(el).toHaveProperty("question", expect.any(Array));
                         expect(el).toHaveProperty("title", expect.any(String));
                     });
+                    return done();
+                });
+        });
+
+        test("500 get all ISE test", (done) => {
+            jest.spyOn(AppQuiz, "findAll").mockRejectedValue("Error");
+            request(app)
+                .get("/appquiz/")
+                .end((err, res) => {
+                    if (err) return done(err);
+                    const { body, status } = res;
+                    expect(status).toBe(500);
+                    expect(body).toHaveProperty("message", "Internal Server Error");
                     return done();
                 });
         });
@@ -43,6 +61,19 @@ describe("AppQuiz Routes Test", () => {
                         expect(el).toHaveProperty("CoupleId", expect.any(Number));
                         expect(el).toHaveProperty("QuizId", expect.any(Number));
                     });
+                    return done();
+                });
+        });
+
+        test("500 get all ISE result", (done) => {
+            jest.spyOn(AppQuizResult, "findAll").mockRejectedValue("Error");
+            request(app)
+                .get("/appquiz/result")
+                .end((err, res) => {
+                    if (err) return done(err);
+                    const { body, status } = res;
+                    expect(status).toBe(500);
+                    expect(body).toHaveProperty("message", "Internal Server Error");
                     return done();
                 });
         });
@@ -213,6 +244,24 @@ describe("AppQuiz Routes Test", () => {
                     responseUser: [true, false, true, true, true, false, false],
                     QuizId: 1,
                     CoupleId: 1,
+                })
+                .end((err, res) => {
+                    if (err) return done(err);
+                    const { body, status } = res;
+                    expect(status).toBe(404);
+                    expect(body).toHaveProperty("message", "Not Found");
+                    return done();
+                });
+        });
+        //test wrong user
+        test("404 - cannot find user ", (done) => {
+            request(app)
+                .post("/appquiz/result/")
+                .send({
+                    responseUser: [true, false, true, true, true, false, false],
+                    QuizId: 1,
+                    CoupleId: 1,
+                    UserId: 55,
                 })
                 .end((err, res) => {
                     if (err) return done(err);
