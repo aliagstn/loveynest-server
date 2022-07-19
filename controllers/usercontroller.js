@@ -1,7 +1,7 @@
 const { User, Couple, sequelize } = require("../models");
+const { comparePassword } = require("../helpers/bcrypt");
 const { convertPayloadToToken } = require("../helpers/jwt");
-const { compare } = require("../helpers/bcrypt");
-
+const { cloudinary } = require("../middlewares/cloudinary");
 class userController {
     static async addUser(req, res, next) {
         try {
@@ -57,8 +57,11 @@ class userController {
             res.status(200).json({
                 message: "User logged in successfully",
                 data: {
+                    id: user.id,
                     nickname: user.nickname,
                     email: user.email,
+                    userCode: user.userCode,
+                    photoProfile: user.photoProfile,
                     access_token,
                 },
             });
@@ -90,7 +93,9 @@ class userController {
                 },
             });
 
-            res.status(200).json(user);
+            res.status(200).json({
+                data: user,
+            });
         } catch (err) {
             next(err);
         }
@@ -101,9 +106,9 @@ class userController {
         try {
             const { id } = req.params;
             const { nickname, photoProfile } = req.body;
-
+            console.log(id);
             const user = await User.findByPk(id);
-
+            console.log(user);
             if (user) {
                 const updated = await User.update(
                     {
@@ -120,12 +125,18 @@ class userController {
 
                 res.status(200).json({
                     message: "User updated successfully",
-                    data: updated,
+                    data: {
+                        id: updated[1][0].id,
+                        nickname: updated[1][0].nickname,
+                        photoProfile: updated[1][0].photoProfile,
+                        userCode: updated[1][0].userCode,
+                    },
                 });
             } else {
                 throw { code: 404 };
             }
         } catch (err) {
+            console.log(err);
             next(err);
         }
     }
@@ -212,8 +223,15 @@ class userController {
                     data: newCouple,
                 });
             } else {
+                const user2 = await User.findOne({
+                    where: {
+                        userCode: partnerCode,
+                    },
+                });
+                console.log(user2);
                 res.status(400).json({
                     message: "You already have a partner",
+                    partnerData: user2,
                 });
             }
         } catch (err) {
