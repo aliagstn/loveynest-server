@@ -1,5 +1,6 @@
 "use strict";
 
+const { query } = require("express");
 const { UserQuiz, UserQuestion, QuizCategory, sequelize } = require("../models");
 
 class QuizController {
@@ -22,6 +23,7 @@ class QuizController {
     static async getQuizById(req, res, next) {
         try {
             const { quizId: id } = req.params;
+
             const quiz = await UserQuiz.findByPk(Number(id), {
                 attributes: {
                     exclude: ["createdAt", "updatedAt"],
@@ -60,9 +62,29 @@ class QuizController {
             const AuthorId = 1; //? didapat dari authN
             const CoupleId = 1; //? didapat dari authN
 
+            if (!AuthorId || !CoupleId) {
+                throw { code: 400 };
+            }
+
             const { question1, question2, question3, question4, question5, quiz } = req.body;
             const { title, QuizCategoryId } = quiz;
             if (!question1 && !question2 && !question3 && !question4 && !question5) {
+                throw { code: 400 };
+            }
+
+            const qc = await QuizCategory.findOne(
+                {
+                    where: {
+                        id: +QuizCategoryId,
+                    },
+                },
+                { transaction: t }
+            );
+            if (!qc) {
+                throw { code: 404 };
+            }
+
+            if (!title) {
                 throw { code: 400 };
             }
 
@@ -74,13 +96,11 @@ class QuizController {
                 status: "",
                 totalPoint: 0,
             };
-
-            const [userQuiz, create] = await UserQuiz.findOrCreate(
-                {
-                    where: inputQuiz,
-                },
-                { transaction: t }
-            );
+            console.log(inputQuiz);
+            const [userQuiz, create] = await UserQuiz.findOrCreate({
+                where: inputQuiz,
+                transaction: t,
+            });
 
             if (!create) {
                 throw { name: "QUIZ_ALLREADY_EXIST" };
@@ -104,6 +124,7 @@ class QuizController {
             }
         } catch (error) {
             t.rollback();
+            console.log(error);
             next(error);
         }
     }
@@ -133,11 +154,15 @@ class QuizController {
                 throw { name: "QUIZ_DONE" };
             } else {
                 let { UserQuestions } = quiz;
+
                 if (answer1) {
+                    let query = {
+                        responsePartner: answer1,
+                    };
+                    answer1 === UserQuestions[0].answer ? (query.valuePartner = true) : (query.valuePartner = false);
+
                     await UserQuestion.update(
-                        {
-                            responsePartner: answer1,
-                        },
+                        query,
                         {
                             where: {
                                 id: UserQuestions[0].id,
@@ -147,10 +172,12 @@ class QuizController {
                     );
                 }
                 if (answer2) {
+                    let query = {
+                        responsePartner: answer2,
+                    };
+
                     await UserQuestion.update(
-                        {
-                            responsePartner: answer2,
-                        },
+                        query,
                         {
                             where: {
                                 id: UserQuestions[1].id,
@@ -160,10 +187,12 @@ class QuizController {
                     );
                 }
                 if (answer3) {
+                    let query = {
+                        responsePartner: answer3,
+                    };
+                    answer3 === UserQuestions[2].answer ? (query.valuePartner = true) : (query.valuePartner = false);
                     await UserQuestion.update(
-                        {
-                            responsePartner: answer3,
-                        },
+                        query,
                         {
                             where: {
                                 id: UserQuestions[2].id,
@@ -173,10 +202,12 @@ class QuizController {
                     );
                 }
                 if (answer4) {
+                    let query = {
+                        responsePartner: answer4,
+                    };
+                    answer4 === UserQuestions[3].answer ? (query.valuePartner = true) : (query.valuePartner = false);
                     await UserQuestion.update(
-                        {
-                            responsePartner: answer4,
-                        },
+                        query,
                         {
                             where: {
                                 id: UserQuestions[3].id,
@@ -186,10 +217,12 @@ class QuizController {
                     );
                 }
                 if (answer5) {
+                    let query = {
+                        responsePartner: answer5,
+                    };
+                    answer5 === UserQuestions[4].answer ? (query.valuePartner = true) : (query.valuePartner = false);
                     await UserQuestion.update(
-                        {
-                            responsePartner: answer5,
-                        },
+                        query,
                         {
                             where: {
                                 id: UserQuestions[4].id,
@@ -239,64 +272,6 @@ class QuizController {
             next(error);
         }
     }
-
-    //* CREATE NEW QUESTION
-    // static async createQuestion(req, res, next) {
-    //     const t = await sequelize.transaction();
-
-    //     try {
-    //         const { quizId } = req.params;
-    //         const { question, answer, optionA, optionB } = req.body;
-
-    //         if (!answer || !question || !optionA || !optionB) {
-    //             throw { name: "EMPTY_INPUT" };
-    //         } else {
-    //             const inputQuestion = {
-    //                 question,
-    //                 answer,
-    //                 QuizId: quizId,
-    //                 responsePartner: "",
-    //                 valuePartner: null,
-    //                 optionA,
-    //                 optionB,
-    //             };
-
-    //             const [userQuestions, create] = await UserQuestion.findOrCreate({
-    //                 where: inputQuestion,
-    //                 transaction: t,
-    //             });
-
-    //             if (!create) {
-    //                 throw { name: "QUESTION_ALLREADY_EXIST" };
-    //             } else {
-    //                 //* UPDATE STATUS
-    //                 const updateStatusQuiz = await UserQuiz.update(
-    //                     {
-    //                         status: "Undone",
-    //                     },
-    //                     {
-    //                         where: {
-    //                             id: Number(quizId),
-    //                         },
-    //                     },
-    //                     { transaction: t }
-    //                 );
-
-    //                 await t.commit();
-
-    //                 res.status(201).json({
-    //                     message: "Question create successfully",
-    //                 });
-    //             }
-    //         }
-    //     } catch (error) {
-    //         console.log(error);
-    //         t.rollback();
-    //         next(error);
-    //     }
-    // }
-
-    //* GET TOTAL SCORE
 
     static async totalScore(req, res, next) {
         try {

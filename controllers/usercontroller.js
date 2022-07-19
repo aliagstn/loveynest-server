@@ -2,6 +2,7 @@ const { User, Couple, sequelize } = require("../models");
 const { comparePassword } = require("../helpers/bcrypt");
 const { convertPayloadToToken } = require("../helpers/jwt");
 const { cloudinary } = require("../middlewares/cloudinary");
+const { Op } = require("sequelize");
 class userController {
     static async addUser(req, res, next) {
         try {
@@ -34,6 +35,9 @@ class userController {
         try {
             const { email, password } = req.body;
 
+            if (!email || !password) {
+                throw { code: 401 };
+            }
             const user = await User.findOne({
                 where: {
                     email,
@@ -66,9 +70,11 @@ class userController {
                 },
             });
         } catch (err) {
+            console.log(err);
             next(err);
         }
     }
+
     static async getAllUsers(req, res, next) {
         try {
             const users = await User.findAll({
@@ -92,7 +98,9 @@ class userController {
                     exclude: ["password"],
                 },
             });
-
+            if (!user) {
+                throw { code: 404 };
+            }
             res.status(200).json({
                 data: user,
             });
@@ -100,15 +108,17 @@ class userController {
             next(err);
         }
     }
-// usefocuseffect
+    // usefocuseffect
     // update user detail
     static async updateUser(req, res, next) {
         const t = await sequelize.transaction();
         try {
             const { id } = req.params;
             const { nickname, photoProfile } = req.body;
-
-            const user = await User.findByPk(id, { transaction: t });
+            if (!nickname && !photoProfile) {
+                throw { code: 400 };
+            }
+            const user = await User.findByPk(+id, { transaction: t });
 
             if (user) {
                 const updated = await User.update(
@@ -148,18 +158,14 @@ class userController {
         try {
             const { id } = req.params;
             const { partnerCode } = req.body;
-            console.log(id, partnerCode, "<<di input parttner code")
+            if (!partnerCode) {
+                throw { code: 400 };
+            }
             const user1 = await User.findByPk(id, { transaction: t });
 
             if (partnerCode === user1.userCode) {
-                throw { code: 404 };
+                throw { code: 400 };
             }
-
-            if (user1.coupleId) {
-                throw { code: 404 };
-            }
-
-            // insert partner code
             if (!user1.CoupleId) {
                 const updatedUser1 = await User.update(
                     {
@@ -167,34 +173,33 @@ class userController {
                     },
                     {
                         where: {
-                            id,
+                            id: +id,
                         },
                         returning: true,
-                    },
+                    }
                     // { transaction: t }
                 );
-                    console.log(updatedUser1)
                 // get the other user
                 const user2 = await User.findOne(
                     {
                         where: {
                             userCode: partnerCode,
                         },
-                    },
+                    }
                     // { transaction: t }
                 );
-                console.log(user2)
-
+                if (user2.partnerCode) {
+                    throw { code: 400 };
+                }
                 // create new couple
                 const newCouple = await Couple.create(
                     {
                         UserId1: user1.id,
                         UserId2: user2.id,
-                    },
+                    }
                     // { transaction: t }
                 );
                 // await t.commit()
-                    console.log(newCouple)
                 //update coupleid
                 const updateCoupleIdUser1 = await User.update(
                     {
@@ -204,10 +209,10 @@ class userController {
                         where: {
                             id: +id,
                         },
-                    },
+                    }
                     // { transaction: t }
                 );
-                    console.log(updateCoupleIdUser1)
+
                 const updatedUser2 = await User.update(
                     {
                         partnerCode: user1.userCode,
@@ -217,10 +222,9 @@ class userController {
                         where: {
                             id: +user2.id,
                         },
-                    },
+                    }
                     // { transaction: t }
                 );
-                    console.log(updatedUser2)
                 await t.commit();
 
                 res.status(201).json({
@@ -239,53 +243,42 @@ class userController {
                 });
             }
         } catch (err) {
-            console.log(err)
+            console.log(err);
             await t.rollback();
             next(err);
         }
     }
 
-    static async deletePartnerCode(req, res) {
+    static async deletePartnerCode(req, res, next) {
         const t = await sequelize.transaction();
         try {
             const { id } = req.params;
+            // find the user
+            const user1 = await User.findByPk(+id, { transaction: t });
 
-            const user1 = await User.findByPk(id);
-
-            const couple = await Couple.findOne({
-                where: {
-                    id: user1.CoupleId,
-                },
-            });
-
-            const updatedUser1 = await User.update(
-                {
-                    partnerCode: null,
-                },
+            const couple = await Couple.findOne(
                 {
                     where: {
-                        id,
+                        id: user1.CoupleId,
                     },
-                    returning: true,
                 },
                 { transaction: t }
             );
 
-            const user2 = await User.findOne({
-                where: {
-                    CoupleId: user1.CoupleId,
-                },
-            });
+            if (!couple) {
+                throw { code: 400 };
+            }
 
-            const updateCoupleIdUser1 = await User.update(
-                {
-                    CoupleId: null,
-                },
+            const user2 = await User.findOne(
                 {
                     where: {
-                        id,
+                        CoupleId: couple.id,
+                        id: {
+                            [Op.not]: +id,
+                        },
                     },
-                }
+                },
+                { transaction: t }
             );
 
             const updatedUser2 = await User.update(
@@ -297,14 +290,30 @@ class userController {
                     where: {
                         id: user2.id,
                     },
-                }
+                },
+                { transaction: t }
             );
 
-            const deleteCouple = await Couple.destroy({
-                where: {
-                    id: couple.id,
+            const updateCoupleIdUser1 = await User.update(
+                {
+                    CoupleId: null,
                 },
-            });
+                {
+                    where: {
+                        id: +id,
+                    },
+                },
+                { transaction: t }
+            );
+
+            const deleteCouple = await Couple.destroy(
+                {
+                    where: {
+                        id: couple.id,
+                    },
+                },
+                { transaction: t }
+            );
 
             await t.commit();
 
@@ -312,44 +321,14 @@ class userController {
                 message: "partnerCode deleted successfully",
             });
         } catch (err) {
+            console.log(err);
             await t.rollback();
             next(err);
         }
     }
 
-    static async deleteCouple(req, res) {
-        const t = await sequelize.transaction();
-        try {
-            const { id } = req.params;
-
-            const couple = await Couple.findByPk(id, { transaction: t });
-
-            if (!couple) {
-                throw { name: "coupleNotFound" };
-            }
-
-            const deleted = await Couple.destroy(
-                {
-                    where: {
-                        id,
-                    },
-                    returning: true,
-                },
-                { transaction: t }
-            );
-
-            await t.commit();
-            res.status(200).json({
-                message: "Couple deleted successfully",
-                data: deleted,
-            });
-        } catch (err) {
-            await t.rollback();
-        }
-    }
-
     //TAMBAHAN DARI ALIA DARI SINIII
-    static async postToCloudinary(req, res) {
+    static async postToCloudinary(req, res, next) {
         try {
             const { img } = await req.body;
             const uploadedResponse = await cloudinary.uploader.upload(img, {

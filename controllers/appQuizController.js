@@ -39,6 +39,7 @@ class AppQuizControl {
             }
         } catch (err) {
             await t.rollback();
+
             next(err);
         }
     }
