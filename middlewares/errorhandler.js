@@ -14,7 +14,7 @@ const errorHandler = (err, req, res, next) => {
     } else if (name === "SequelizeDatabaseError") {
         code = 400;
         message = "Bad Request";
-    } else if (name === "invalid access token") {
+    } else if (name === "Invalid access token") {
         code = 401;
         message = name;
     } else if (name === "EMPTY_INPUT") {

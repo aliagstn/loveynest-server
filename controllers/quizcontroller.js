@@ -1,5 +1,6 @@
 "use strict";
 
+const { query } = require("express");
 const { UserQuiz, UserQuestion, QuizCategory, sequelize } = require("../models");
 
 class QuizController {
@@ -153,11 +154,15 @@ class QuizController {
                 throw { name: "QUIZ_DONE" };
             } else {
                 let { UserQuestions } = quiz;
+
                 if (answer1) {
+                    let query = {
+                        responsePartner: answer1,
+                    };
+                    answer1 === UserQuestions[0].answer ? (query.valuePartner = true) : (query.valuePartner = false);
+
                     await UserQuestion.update(
-                        {
-                            responsePartner: answer1,
-                        },
+                        query,
                         {
                             where: {
                                 id: UserQuestions[0].id,
@@ -167,10 +172,12 @@ class QuizController {
                     );
                 }
                 if (answer2) {
+                    let query = {
+                        responsePartner: answer2,
+                    };
+
                     await UserQuestion.update(
-                        {
-                            responsePartner: answer2,
-                        },
+                        query,
                         {
                             where: {
                                 id: UserQuestions[1].id,
@@ -180,10 +187,12 @@ class QuizController {
                     );
                 }
                 if (answer3) {
+                    let query = {
+                        responsePartner: answer3,
+                    };
+                    answer3 === UserQuestions[2].answer ? (query.valuePartner = true) : (query.valuePartner = false);
                     await UserQuestion.update(
-                        {
-                            responsePartner: answer3,
-                        },
+                        query,
                         {
                             where: {
                                 id: UserQuestions[2].id,
@@ -193,10 +202,12 @@ class QuizController {
                     );
                 }
                 if (answer4) {
+                    let query = {
+                        responsePartner: answer4,
+                    };
+                    answer4 === UserQuestions[3].answer ? (query.valuePartner = true) : (query.valuePartner = false);
                     await UserQuestion.update(
-                        {
-                            responsePartner: answer4,
-                        },
+                        query,
                         {
                             where: {
                                 id: UserQuestions[3].id,
@@ -206,10 +217,12 @@ class QuizController {
                     );
                 }
                 if (answer5) {
+                    let query = {
+                        responsePartner: answer5,
+                    };
+                    answer5 === UserQuestions[4].answer ? (query.valuePartner = true) : (query.valuePartner = false);
                     await UserQuestion.update(
-                        {
-                            responsePartner: answer5,
-                        },
+                        query,
                         {
                             where: {
                                 id: UserQuestions[4].id,
