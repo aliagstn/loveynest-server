@@ -62,12 +62,22 @@ module.exports = (sequelize, DataTypes) => {
                         instance.password = hash(instance.password);
                         const users = await User.findAll();
                         const usersCode = users.map((code) => {
-                            return code.userCode;
+                            return code.userCode.split("LV-").join("");
                         });
                         instance.userCode;
+                        let random;
                         do {
-                            instance.userCode = "LV" + Math.floor(Math.random() * 10000);
+                            random = Math.floor(Math.random() * Math.pow(10, 4));
                         } while (usersCode.indexOf(instance.userCode) !== -1);
+                        random = random.toString();
+                        if (random.length === 3) {
+                            random = "0" + random;
+                        } else if (random.length === 2) {
+                            random = "00" + random;
+                        } else if (random.length === 1) {
+                            random = "000" + random;
+                        }
+                        instance.userCode = `LV-${random}`;
                     } catch (err) {
                         console.log(err);
                     }
