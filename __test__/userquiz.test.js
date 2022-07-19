@@ -1,6 +1,7 @@
 const app = require("../app.js");
 const request = require("supertest");
 const { UserQuiz } = require("../models");
+const { set } = require("../app.js");
 
 beforeEach(() => {
     jest.restoreAllMocks();
@@ -42,6 +43,8 @@ const quizInsert = {
         answer: "A",
     },
 };
+const token =
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiaWF0IjoxNjU4MjYwNjQxfQ.VyCq6K_eEXVpDVnYi32VdbURzsrLqjomCFkaSY9Avy0";
 
 const answers = {
     answer1: "A",
@@ -70,7 +73,6 @@ describe("UserQuiz Routes Test", () => {
                     return done();
                 })
                 .catch((err) => {
-                    console.log(err);
                     done(err);
                 });
         });
@@ -86,7 +88,6 @@ describe("UserQuiz Routes Test", () => {
                     return done();
                 })
                 .catch((err) => {
-                    console.log(err);
                     done(err);
                 });
         });
@@ -116,7 +117,6 @@ describe("UserQuiz Routes Test", () => {
                     return done();
                 })
                 .catch((err) => {
-                    console.log(err);
                     done(err);
                 });
         });
@@ -131,7 +131,6 @@ describe("UserQuiz Routes Test", () => {
                     return done();
                 })
                 .catch((err) => {
-                    console.log(err);
                     done(err);
                 });
         });
@@ -142,6 +141,7 @@ describe("UserQuiz Routes Test", () => {
             request(app)
                 .post("/userquiz")
                 .send(quizInsert)
+                .set("access_token", token)
                 .then((res) => {
                     const { status, body } = res;
                     expect(status).toBe(201);
@@ -159,7 +159,6 @@ describe("UserQuiz Routes Test", () => {
                     return done();
                 })
                 .catch((err) => {
-                    console.log(err);
                     done(err);
                 });
         });
@@ -168,6 +167,7 @@ describe("UserQuiz Routes Test", () => {
         test("400 no questions", (done) => {
             request(app)
                 .post("/userquiz")
+                .set("access_token", token)
                 .send({
                     quiz: {
                         title: "test title",
@@ -181,7 +181,6 @@ describe("UserQuiz Routes Test", () => {
                     return done();
                 })
                 .catch((err) => {
-                    console.log(err);
                     done(err);
                 });
         });
@@ -189,6 +188,7 @@ describe("UserQuiz Routes Test", () => {
         test("404 - no category id", (done) => {
             request(app)
                 .post("/userquiz")
+                .set("access_token", token)
                 .send({
                     quiz: {
                         title: "test title",
@@ -231,7 +231,6 @@ describe("UserQuiz Routes Test", () => {
                     return done();
                 })
                 .catch((err) => {
-                    console.log(err);
                     done(err);
                 });
         });
@@ -239,6 +238,7 @@ describe("UserQuiz Routes Test", () => {
         test("404 - no title", (done) => {
             request(app)
                 .post("/userquiz")
+                .set("access_token", token)
                 .send({
                     quiz: {
                         QuizCategoryId: "3",
@@ -281,13 +281,13 @@ describe("UserQuiz Routes Test", () => {
                     return done();
                 })
                 .catch((err) => {
-                    console.log(err);
                     done(err);
                 });
         });
         test("404 - category is not found", (done) => {
             request(app)
                 .post("/userquiz")
+                .set("access_token", token)
                 .send({
                     quiz: {
                         title: "CategoryErrorLOL",
@@ -331,13 +331,13 @@ describe("UserQuiz Routes Test", () => {
                     return done();
                 })
                 .catch((err) => {
-                    console.log(err);
                     done(err);
                 });
         });
         test("400 repeat insert", (done) => {
             request(app)
                 .post("/userquiz")
+                .set("access_token", token)
                 .send(quizInsert)
                 .then((res) => {
                     const { status, body } = res;
@@ -346,7 +346,6 @@ describe("UserQuiz Routes Test", () => {
                     return done();
                 })
                 .catch((err) => {
-                    console.log(err);
                     done(err);
                 });
         });
@@ -356,6 +355,7 @@ describe("UserQuiz Routes Test", () => {
         test("200 updated - success in adding answer", (done) => {
             request(app)
                 .patch("/userquiz/3")
+                .set("access_token", token)
                 .send(answers)
                 .then((res) => {
                     const { status, body } = res;
@@ -371,6 +371,7 @@ describe("UserQuiz Routes Test", () => {
         test("404 - quiz id not found", (done) => {
             request(app)
                 .patch("/userquiz/93")
+                .set("access_token", token)
                 .send(answers)
                 .then((res) => {
                     const { status, body } = res;
@@ -386,6 +387,7 @@ describe("UserQuiz Routes Test", () => {
         test("400 - quiz has been finished", (done) => {
             request(app)
                 .patch("/userquiz/3")
+                .set("access_token", token)
                 .send(answers)
                 .then((res) => {
                     const { status, body } = res;
@@ -403,6 +405,7 @@ describe("UserQuiz Routes Test", () => {
         test("200 - success on getting score", (done) => {
             request(app)
                 .get("/userquiz/3/total-score")
+                .set("access_token", token)
                 .then((res) => {
                     const { status, body } = res;
                     expect(status).toBe(200);
@@ -418,6 +421,7 @@ describe("UserQuiz Routes Test", () => {
         test("404 quiz not found", (done) => {
             request(app)
                 .get("/userquiz/99/total-score")
+                .set("access_token", token)
                 .then((res) => {
                     const { status, body } = res;
                     expect(status).toBe(404);

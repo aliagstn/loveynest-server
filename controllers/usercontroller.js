@@ -70,7 +70,6 @@ class userController {
                 },
             });
         } catch (err) {
-            console.log(err);
             next(err);
         }
     }
@@ -243,7 +242,6 @@ class userController {
                 });
             }
         } catch (err) {
-            console.log(err);
             await t.rollback();
             next(err);
         }
@@ -321,7 +319,6 @@ class userController {
                 message: "partnerCode deleted successfully",
             });
         } catch (err) {
-            console.log(err);
             await t.rollback();
             next(err);
         }
