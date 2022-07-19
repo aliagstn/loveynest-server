@@ -10,24 +10,31 @@ class topicController {
 
       const coupleTopicsId = coupleTopics.map(coupleTopic => coupleTopic.TopicId);
 
+      // console.log(coupleTopicsId);
+
       const topics = await Topic.findAll()
       const topicsId = topics.map(topic => topic.id)
 
-      let randomTopics = topicsId.filter(topic => !coupleTopicsId.includes(topic));
+      let filteredTopics = topicsId.filter(topic => !coupleTopicsId.includes(topic));
+
+      // console.log(filteredTopics);
 
       let threeTopics = [];
       for (let i = 0; i < 3; i++) {
-        let random = Math.floor(Math.random() * randomTopics.length);
-        threeTopics.push(randomTopics[random]);
-        randomTopics.splice(random, 1);
+        let random = Math.floor(Math.random() * filteredTopics.length);
+        // console.log(random, '<<< random');
+        threeTopics.push(filteredTopics[random]);
+        filteredTopics.splice(random, 1);
       }
+
+      // console.log(threeTopics);
 
       const threeRandomTopics = await Topic.findAll({
         where: { id: threeTopics }
       });
 
       res.status(200).json({
-        message: 'Topics retrieved successfully',
+        message: '3 random topics retrieved successfully',
         data: threeRandomTopics,
       });
     } catch (err) {
@@ -81,13 +88,12 @@ class topicController {
 
   static async addCoupleTopics(req, res) {
     try {
-      const { status, TopicId } = req.body;
+      const { TopicId } = req.body;
       const { CoupleId } = req.user
 
       console.log(CoupleId);
 
       const newCoupleTopic = await CoupleTopic.create({
-        status,
         TopicId,
         CoupleId,
       });

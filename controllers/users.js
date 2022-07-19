@@ -50,7 +50,14 @@ class userController {
 
       res.status(201).json({
         message: 'User created successfully',
-        data: newUser,
+        data: {
+          nickname: newUser.nickname,
+          email: newUser.email,
+          userCode: newUser.userCode,
+          partnerCode: newUser.partnerCode,
+          photoProfile: newUser.photoProfile,
+          CoupleId: newUser.CoupleId,
+        },
       });
     } catch (err) {
       console.log(err);

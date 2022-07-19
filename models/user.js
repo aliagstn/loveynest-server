@@ -46,8 +46,8 @@ module.exports = (sequelize, DataTypes) => {
           notNull: {
             msg: "Password is required",
           },
-          length: {
-            args: [6],
+          min: {
+            args: 6,
             msg: "Password must be at least 6 characters",
           }
         }
@@ -67,14 +67,28 @@ module.exports = (sequelize, DataTypes) => {
     try {
       const users = await User.findAll()
       const usersCode = users.map((code) => {
-        return code.userCode;
+        return code.userCode.split('LV-').join('')
       })
 
-      instance.userCode;
+
+      console.log(usersCode);
+
+      let random;
       do {
-        instance.userCode = 'LV-' + Math.floor(Math.random() * 10000);
+        random = Math.floor(Math.random() * (Math.pow(10, 4)));
 
       } while (usersCode.indexOf(instance.userCode) !== -1);
+
+      random = random.toString();
+      if (random.length === 3) {
+        random = '0' + random;
+      } else if (random.length === 2) {
+        random = '00' + random;
+      } else if (random.length === 1) {
+        random = '000' + random;
+      }
+
+      instance.userCode = `LV-${random}`;
     } catch (err) {
       console.log(err);
     }
