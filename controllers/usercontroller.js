@@ -100,7 +100,7 @@ class userController {
             next(err);
         }
     }
-
+// usefocuseffect
     // update user detail
     static async updateUser(req, res, next) {
         const t = await sequelize.transaction();
@@ -148,7 +148,7 @@ class userController {
         try {
             const { id } = req.params;
             const { partnerCode } = req.body;
-
+            console.log(id, partnerCode, "<<di input parttner code")
             const user1 = await User.findByPk(id, { transaction: t });
 
             if (partnerCode === user1.userCode) {
@@ -171,18 +171,19 @@ class userController {
                         },
                         returning: true,
                     },
-                    { transaction: t }
+                    // { transaction: t }
                 );
-
+                    console.log(updatedUser1)
                 // get the other user
                 const user2 = await User.findOne(
                     {
                         where: {
-                            userCode: user1.partnerCode,
+                            userCode: partnerCode,
                         },
                     },
-                    { transaction: t }
+                    // { transaction: t }
                 );
+                console.log(user2)
 
                 // create new couple
                 const newCouple = await Couple.create(
@@ -190,35 +191,44 @@ class userController {
                         UserId1: user1.id,
                         UserId2: user2.id,
                     },
-                    { transaction: t }
+                    // { transaction: t }
                 );
+<<<<<<< HEAD
                 await t.commit();
+=======
+                // await t.commit()
+                    console.log(newCouple)
+>>>>>>> 1caf5fa6bc248a75c994724d36c7bf2ce382efa0
                 //update coupleid
                 const updateCoupleIdUser1 = await User.update(
                     {
-                        CoupleId: newCouple.id,
+                        CoupleId: +newCouple.id,
                     },
                     {
                         where: {
                             id: +id,
                         },
                     },
-                    { transaction: t }
+                    // { transaction: t }
                 );
-
+                    console.log(updateCoupleIdUser1)
                 const updatedUser2 = await User.update(
                     {
                         partnerCode: user1.userCode,
+<<<<<<< HEAD
                         CoupleId: newCouple.id,
+=======
+                        CoupleId: +newCouple.id,
+>>>>>>> 1caf5fa6bc248a75c994724d36c7bf2ce382efa0
                     },
                     {
                         where: {
-                            id: user2.id,
+                            id: +user2.id,
                         },
                     },
-                    { transaction: t }
+                    // { transaction: t }
                 );
-
+                    console.log(updatedUser2)
                 await t.commit();
 
                 res.status(201).json({
@@ -231,13 +241,13 @@ class userController {
                         userCode: partnerCode,
                     },
                 });
-                await t.rollback();
                 res.status(400).json({
                     message: "You already have a partner",
                     partnerData: user2,
                 });
             }
         } catch (err) {
+            console.log(err)
             await t.rollback();
             next(err);
         }
