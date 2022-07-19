@@ -22,6 +22,7 @@ class QuizController {
     static async getQuizById(req, res, next) {
         try {
             const { quizId: id } = req.params;
+
             const quiz = await UserQuiz.findByPk(Number(id), {
                 attributes: {
                     exclude: ["createdAt", "updatedAt"],
@@ -60,9 +61,29 @@ class QuizController {
             const AuthorId = 1; //? didapat dari authN
             const CoupleId = 1; //? didapat dari authN
 
+            if (!AuthorId || !CoupleId) {
+                throw { code: 400 };
+            }
+
             const { question1, question2, question3, question4, question5, quiz } = req.body;
             const { title, QuizCategoryId } = quiz;
             if (!question1 && !question2 && !question3 && !question4 && !question5) {
+                throw { code: 400 };
+            }
+
+            const qc = await QuizCategory.findOne(
+                {
+                    where: {
+                        id: +QuizCategoryId,
+                    },
+                },
+                { transaction: t }
+            );
+            if (!qc) {
+                throw { code: 404 };
+            }
+
+            if (!title) {
                 throw { code: 400 };
             }
 
@@ -74,13 +95,11 @@ class QuizController {
                 status: "",
                 totalPoint: 0,
             };
-
-            const [userQuiz, create] = await UserQuiz.findOrCreate(
-                {
-                    where: inputQuiz,
-                },
-                { transaction: t }
-            );
+            console.log(inputQuiz);
+            const [userQuiz, create] = await UserQuiz.findOrCreate({
+                where: inputQuiz,
+                transaction: t,
+            });
 
             if (!create) {
                 throw { name: "QUIZ_ALLREADY_EXIST" };
@@ -104,6 +123,7 @@ class QuizController {
             }
         } catch (error) {
             t.rollback();
+            console.log(error);
             next(error);
         }
     }
@@ -239,64 +259,6 @@ class QuizController {
             next(error);
         }
     }
-
-    //* CREATE NEW QUESTION
-    // static async createQuestion(req, res, next) {
-    //     const t = await sequelize.transaction();
-
-    //     try {
-    //         const { quizId } = req.params;
-    //         const { question, answer, optionA, optionB } = req.body;
-
-    //         if (!answer || !question || !optionA || !optionB) {
-    //             throw { name: "EMPTY_INPUT" };
-    //         } else {
-    //             const inputQuestion = {
-    //                 question,
-    //                 answer,
-    //                 QuizId: quizId,
-    //                 responsePartner: "",
-    //                 valuePartner: null,
-    //                 optionA,
-    //                 optionB,
-    //             };
-
-    //             const [userQuestions, create] = await UserQuestion.findOrCreate({
-    //                 where: inputQuestion,
-    //                 transaction: t,
-    //             });
-
-    //             if (!create) {
-    //                 throw { name: "QUESTION_ALLREADY_EXIST" };
-    //             } else {
-    //                 //* UPDATE STATUS
-    //                 const updateStatusQuiz = await UserQuiz.update(
-    //                     {
-    //                         status: "Undone",
-    //                     },
-    //                     {
-    //                         where: {
-    //                             id: Number(quizId),
-    //                         },
-    //                     },
-    //                     { transaction: t }
-    //                 );
-
-    //                 await t.commit();
-
-    //                 res.status(201).json({
-    //                     message: "Question create successfully",
-    //                 });
-    //             }
-    //         }
-    //     } catch (error) {
-    //         console.log(error);
-    //         t.rollback();
-    //         next(error);
-    //     }
-    // }
-
-    //* GET TOTAL SCORE
 
     static async totalScore(req, res, next) {
         try {

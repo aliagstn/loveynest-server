@@ -7,7 +7,7 @@ const user1 = {
     nickname: "User Test",
     password: "usertest",
 };
-jest.useFakeTimers("legacy");
+
 describe("User Routes Test", () => {
     describe("POST /register - create new user", () => {
         test("201 Success register - should create new User", (done) => {

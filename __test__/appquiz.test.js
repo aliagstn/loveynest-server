@@ -300,23 +300,23 @@ describe("AppQuiz Routes Test", () => {
     });
 
     // test correct
-    // test("201 - success on posting answer", (done) => {
-    //     request(app)
-    //         .post("/appquiz/result/")
-    //         .send(answer)
-    //         .then((res) => {
-    //             const { body, status } = res;
-    //             expect(status).toBe(201);
-    //             expect(body).toHaveProperty("id", expect.any(Number));
-    //             expect(body).toHaveProperty("responseUser", expect.any(Array));
-    //             expect(body).toHaveProperty("QuizId", expect.any(Number));
-    //             expect(body).toHaveProperty("UserId", expect.any(Number));
-    //             expect(body).toHaveProperty("CoupleId", expect.any(Number));
-    //             return done();
-    //         })
-    //         .catch((err) => {
-    //             console.log(err);
-    //             done(err);
-    //         });
-    // });
+    test("201 - success on posting answer", (done) => {
+        request(app)
+            .post("/appquiz/result/")
+            .send(answer)
+            .then((res) => {
+                const { body, status } = res;
+                expect(status).toBe(201);
+                expect(body).toHaveProperty("id", expect.any(Number));
+                expect(body).toHaveProperty("responseUser", expect.any(Array));
+                expect(body).toHaveProperty("QuizId", expect.any(Number));
+                expect(body).toHaveProperty("UserId", expect.any(Number));
+                expect(body).toHaveProperty("CoupleId", expect.any(Number));
+                return done();
+            })
+            .catch((err) => {
+                console.log(err);
+                done(err);
+            });
+    });
 });

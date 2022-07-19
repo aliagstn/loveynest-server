@@ -25,14 +25,14 @@ module.exports = (sequelize, DataTypes) => {
                     notEmpty: { msg: "responseUser cannot be empty" },
                     notNull: { msg: "responseUser cannot be empty" },
                     customValidator(responseUser) {
-                        if (responseUser) {
+                        if (!responseUser) {
                             throw { code: 400 };
                         }
                         if (Array.isArray(responseUser) === false) {
-                            throw { msg: "Response User must be an array" };
+                            throw { code: 400 };
                         }
                         if (responseUser.length !== 7) {
-                            throw { msg: "You must answer all the questions." };
+                            throw { code: 400 };
                         }
                     },
                 },

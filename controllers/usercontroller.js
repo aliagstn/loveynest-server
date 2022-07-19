@@ -167,7 +167,7 @@ class userController {
                     },
                     {
                         where: {
-                            id,
+                            id: +id,
                         },
                         returning: true,
                     },
@@ -192,7 +192,7 @@ class userController {
                     },
                     { transaction: t }
                 );
-
+                await t.commit();
                 //update coupleid
                 const updateCoupleIdUser1 = await User.update(
                     {
@@ -200,7 +200,7 @@ class userController {
                     },
                     {
                         where: {
-                            id,
+                            id: +id,
                         },
                     },
                     { transaction: t }
@@ -208,7 +208,7 @@ class userController {
 
                 const updatedUser2 = await User.update(
                     {
-                        partnerCode: user1.partnerCode,
+                        partnerCode: user1.userCode,
                         CoupleId: newCouple.id,
                     },
                     {
