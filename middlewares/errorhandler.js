@@ -11,7 +11,10 @@ const errorHandler = (err, req, res, next) => {
     } else if (name === "SequelizeUniqueConstraintError") {
         code = 401;
         message = "E-mail must be unique";
-    } else if (name === "invalid access token") {
+    } else if (name === "SequelizeDatabaseError") {
+        code = 400;
+        message = "Bad Request";
+    } else if (name === "Invalid access token") {
         code = 401;
         message = name;
     } else if (name === "EMPTY_INPUT") {
@@ -32,7 +35,7 @@ const errorHandler = (err, req, res, next) => {
     } else {
         switch (code) {
             case 400:
-                message = "Bad request";
+                message = "Bad Request";
                 break;
             case 401:
                 message = "Unauthorized";

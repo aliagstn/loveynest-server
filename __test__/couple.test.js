@@ -1,15 +1,20 @@
 const app = require("../app.js");
 const request = require("supertest");
 const { Couple } = require("../models/index");
-jest.useFakeTimers("legacy");
+
+beforeEach(() => {
+    jest.restoreAllMocks();
+});
+const token =
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNjU4MjQ4MjE2fQ.bIzM9ZHbDgjlocFMYJITQ_2nL7qVe8yl1x0WI-IH-S4";
 
 describe("Couple Routes Test", () => {
     describe("GET /couples/ - get all couple", () => {
         test("200 - success on get all couple", (done) => {
             request(app)
-                .get("/couples/")
-                .end((err, res) => {
-                    if (err) return done(err);
+                .get("/couples")
+                .set("access_token", token)
+                .then((res) => {
                     const { body, status } = res;
                     expect(status).toBe(200);
                     expect(Array.isArray(body)).toBe(true);
@@ -19,6 +24,9 @@ describe("Couple Routes Test", () => {
                         expect(el).toHaveProperty("UserId2", expect.any(Number));
                     });
                     return done();
+                })
+                .catch((err) => {
+                    done(err);
                 });
         });
 
@@ -26,12 +34,15 @@ describe("Couple Routes Test", () => {
             jest.spyOn(Couple, "findAll").mockRejectedValue("Error");
             request(app)
                 .get("/couples/")
-                .end((err, res) => {
-                    if (err) return done(err);
+                .set("access_token", token)
+                .then((res) => {
                     const { body, status } = res;
                     expect(status).toBe(500);
                     expect(body).toHaveProperty("message", "Internal Server Error");
                     return done();
+                })
+                .catch((err) => {
+                    done(err);
                 });
         });
     });
@@ -40,8 +51,8 @@ describe("Couple Routes Test", () => {
         test("200 - success on get one couple", (done) => {
             request(app)
                 .get("/couples/1")
-                .end((err, res) => {
-                    if (err) return done(err);
+                .set("access_token", token)
+                .then((res) => {
                     const { body, status } = res;
                     expect(status).toBe(200);
                     expect(body).toHaveProperty("id", expect.any(Number));
@@ -52,11 +63,14 @@ describe("Couple Routes Test", () => {
                         expect(el).toHaveProperty("id", expect.any(Number));
                         expect(el).toHaveProperty("nickname", expect.any(String));
                         expect(el).toHaveProperty("email", expect.any(String));
-                        expect(el).toHaveProperty("UserCode");
-                        expect(el).toHaveProperty("PartnerCode");
-                        expect(el).toHaveProperty("CoupleId");
+                        expect(el).toHaveProperty("userCode", expect.any(String));
+                        expect(el).toHaveProperty("partnerCode", expect.any(String));
+                        expect(el).toHaveProperty("CoupleId", expect.any(Number));
                     });
                     return done();
+                })
+                .catch((err) => {
+                    done(err);
                 });
         });
     });
@@ -64,12 +78,15 @@ describe("Couple Routes Test", () => {
     test("404 - wrong couple id on get one couple", (done) => {
         request(app)
             .get("/couples/555")
-            .end((err, res) => {
-                if (err) return done(err);
+            .set("access_token", token)
+            .then((res) => {
                 const { body, status } = res;
                 expect(status).toBe(404);
                 expect(body).toHaveProperty("message", "Not Found");
                 return done();
+            })
+            .catch((err) => {
+                done(err);
             });
     });
 });

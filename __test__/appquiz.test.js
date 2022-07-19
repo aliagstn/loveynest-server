@@ -7,6 +7,8 @@ let answer = {
     QuizId: 1,
     CoupleId: 1,
 };
+const token =
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiaWF0IjoxNjU4MjU5ODg4fQ.a9Yau-UeroN31c1PmYJULZE_FNQBMKYjwDlebGbPo7E";
 
 beforeEach(() => {
     jest.restoreAllMocks();
@@ -29,7 +31,6 @@ describe("AppQuiz Routes Test", () => {
                     return done();
                 })
                 .catch((err) => {
-                    console.log(err);
                     done(err);
                 });
         });
@@ -45,7 +46,6 @@ describe("AppQuiz Routes Test", () => {
                     return done();
                 })
                 .catch((err) => {
-                    console.log(err);
                     done(err);
                 });
         });
@@ -54,6 +54,7 @@ describe("AppQuiz Routes Test", () => {
         test("200 - success on get all result", (done) => {
             request(app)
                 .get("/appquiz/result")
+                .set("access_token", token)
                 .then((res) => {
                     const { body, status } = res;
                     expect(status).toBe(200);
@@ -68,7 +69,6 @@ describe("AppQuiz Routes Test", () => {
                     return done();
                 })
                 .catch((err) => {
-                    console.log(err);
                     done(err);
                 });
         });
@@ -77,6 +77,7 @@ describe("AppQuiz Routes Test", () => {
             jest.spyOn(AppQuizResult, "findAll").mockRejectedValue("Error");
             request(app)
                 .get("/appquiz/result")
+                .set("access_token", token)
                 .then((res) => {
                     const { body, status } = res;
                     expect(status).toBe(500);
@@ -84,7 +85,6 @@ describe("AppQuiz Routes Test", () => {
                     return done();
                 })
                 .catch((err) => {
-                    console.log(err);
                     done(err);
                 });
         });
@@ -93,6 +93,7 @@ describe("AppQuiz Routes Test", () => {
         test("200 - success on get one result", (done) => {
             request(app)
                 .get("/appquiz/result/1")
+                .set("access_token", token)
                 .then((res) => {
                     const { body, status } = res;
                     expect(status).toBe(200);
@@ -106,7 +107,6 @@ describe("AppQuiz Routes Test", () => {
                     return done();
                 })
                 .catch((err) => {
-                    console.log(err);
                     done(err);
                 });
         });
@@ -114,26 +114,24 @@ describe("AppQuiz Routes Test", () => {
         test("404 - error when getting result with incorrect id", (done) => {
             request(app)
                 .get("/appquiz/result/99")
+                .set("access_token", token)
                 .then((res) => {
                     const { body, status } = res;
-                    console.log(body, status, "<--- body status");
                     expect(status).toBe(404);
                     expect(body).toHaveProperty("message", "Not Found");
                     return done();
                 })
                 .catch((err) => {
-                    console.log(err);
                     done(err);
                 });
         });
-
-        // test authorization 403 if CoupleId is wrong from access_token
     });
     describe("post /result - post quiz result", () => {
         // test empty response
         test("400 no response", (done) => {
             request(app)
                 .post("/appquiz/result/")
+                .set("access_token", token)
                 .send({
                     UserId: 1,
                     QuizId: 1,
@@ -147,7 +145,6 @@ describe("AppQuiz Routes Test", () => {
                     return done();
                 })
                 .catch((err) => {
-                    console.log(err);
                     done(err);
                 });
         });
@@ -155,6 +152,7 @@ describe("AppQuiz Routes Test", () => {
         test("403 - wrong couple", (done) => {
             request(app)
                 .post("/appquiz/result/")
+                .set("access_token", token)
                 .send({
                     responseUser: [true, false, true, true, true, false, false],
                     UserId: 3,
@@ -168,7 +166,6 @@ describe("AppQuiz Routes Test", () => {
                     return done();
                 })
                 .catch((err) => {
-                    console.log(err);
                     done(err);
                 });
         });
@@ -176,6 +173,7 @@ describe("AppQuiz Routes Test", () => {
         test("404 - wrong couple", (done) => {
             request(app)
                 .post("/appquiz/result/")
+                .set("access_token", token)
                 .send({
                     responseUser: [true, false, true, true, true, false, false],
                     UserId: 3,
@@ -188,7 +186,6 @@ describe("AppQuiz Routes Test", () => {
                     return done();
                 })
                 .catch((err) => {
-                    console.log(err);
                     done(err);
                 });
         });
@@ -196,6 +193,7 @@ describe("AppQuiz Routes Test", () => {
         test("400 - wrong response data  type", (done) => {
             request(app)
                 .post("/appquiz/result/")
+                .set("access_token", token)
                 .send({
                     responseUser: [true, false, true, true, true, "talse", "frue"],
                     UserId: 1,
@@ -209,7 +207,6 @@ describe("AppQuiz Routes Test", () => {
                     return done();
                 })
                 .catch((err) => {
-                    console.log(err);
                     done(err);
                 });
         });
@@ -217,6 +214,7 @@ describe("AppQuiz Routes Test", () => {
         test("400 - response insufficient / sequelize error less than 7", (done) => {
             request(app)
                 .post("/appquiz/result/")
+                .set("access_token", token)
                 .send({
                     responseUser: [true, false, true, true, true, false],
                     UserId: 1,
@@ -230,7 +228,6 @@ describe("AppQuiz Routes Test", () => {
                     return done();
                 })
                 .catch((err) => {
-                    console.log(err);
                     done(err);
                 });
         });
@@ -238,6 +235,7 @@ describe("AppQuiz Routes Test", () => {
         test("400 - response insufficient / sequelize error", (done) => {
             request(app)
                 .post("/appquiz/result/")
+                .set("access_token", token)
                 .send({
                     responseUser: [true, false, true, true, true, false, false, true],
                     UserId: 1,
@@ -246,13 +244,11 @@ describe("AppQuiz Routes Test", () => {
                 })
                 .then((res) => {
                     const { body, status } = res;
-                    console.log(body, status, "<---- body status");
                     expect(status).toBe(400);
                     expect(body).toHaveProperty("message");
                     return done();
                 })
                 .catch((err) => {
-                    console.log(err);
                     done(err);
                 });
         });
@@ -260,6 +256,7 @@ describe("AppQuiz Routes Test", () => {
         test("404 - cannot find user (no user)", (done) => {
             request(app)
                 .post("/appquiz/result/")
+                .set("access_token", token)
                 .send({
                     responseUser: [true, false, true, true, true, false, false],
                     QuizId: 1,
@@ -272,7 +269,6 @@ describe("AppQuiz Routes Test", () => {
                     return done();
                 })
                 .catch((err) => {
-                    console.log(err);
                     done(err);
                 });
         });
@@ -280,6 +276,7 @@ describe("AppQuiz Routes Test", () => {
         test("404 - cannot find user (no user id)", (done) => {
             request(app)
                 .post("/appquiz/result/")
+                .set("access_token", token)
                 .send({
                     responseUser: [true, false, true, true, true, false, false],
                     QuizId: 1,
@@ -293,30 +290,30 @@ describe("AppQuiz Routes Test", () => {
                     return done();
                 })
                 .catch((err) => {
-                    console.log(err);
+                    done(err);
+                });
+        });
+
+        test("201 - success on posting answer", (done) => {
+            request(app)
+                .post("/appquiz/result/")
+                .set("access_token", token)
+                .send(answer)
+                .then((res) => {
+                    const { body, status } = res;
+                    expect(status).toBe(201);
+                    expect(body).toHaveProperty("id", expect.any(Number));
+                    expect(body).toHaveProperty("responseUser", expect.any(Array));
+                    expect(body).toHaveProperty("QuizId", expect.any(Number));
+                    expect(body).toHaveProperty("UserId", expect.any(Number));
+                    expect(body).toHaveProperty("CoupleId", expect.any(Number));
+                    return done();
+                })
+                .catch((err) => {
                     done(err);
                 });
         });
     });
 
     // test correct
-    // test("201 - success on posting answer", (done) => {
-    //     request(app)
-    //         .post("/appquiz/result/")
-    //         .send(answer)
-    //         .then((res) => {
-    //             const { body, status } = res;
-    //             expect(status).toBe(201);
-    //             expect(body).toHaveProperty("id", expect.any(Number));
-    //             expect(body).toHaveProperty("responseUser", expect.any(Array));
-    //             expect(body).toHaveProperty("QuizId", expect.any(Number));
-    //             expect(body).toHaveProperty("UserId", expect.any(Number));
-    //             expect(body).toHaveProperty("CoupleId", expect.any(Number));
-    //             return done();
-    //         })
-    //         .catch((err) => {
-    //             console.log(err);
-    //             done(err);
-    //         });
-    // });
 });

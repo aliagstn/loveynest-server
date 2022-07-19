@@ -56,15 +56,6 @@ module.exports = (sequelize, DataTypes) => {
             QuizId: DataTypes.INTEGER,
         },
         {
-            hooks: {
-                beforeUpdate(instance, options) {
-                    if (instance.responsePartner === answer) {
-                        instance.valuePartner = true;
-                    } else {
-                        instance.valuePartner = false;
-                    }
-                },
-            },
             sequelize,
             modelName: "UserQuestion",
         }

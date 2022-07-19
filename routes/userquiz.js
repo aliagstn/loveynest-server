@@ -1,12 +1,11 @@
 const router = require("express").Router();
 const QuizController = require("../controllers/quizcontroller");
-
+const userAuthentication = require("../middlewares/userauthentication");
+const authorization = require("../middlewares/authorization");
 router.get("/", QuizController.getQuiz);
-router.post("/", QuizController.createQuiz);
-// router.get('/quiz/categories', QuizController.createQuiz)
+router.post("/", userAuthentication, QuizController.createQuiz);
 router.patch("/:quizId/", QuizController.updateResponseQuiz);
 router.get("/:quizId", QuizController.getQuizById);
-// router.post("/:quizId", QuizController.createQuestion);
 router.get("/:quizId/total-score", QuizController.totalScore);
 
 module.exports = router;

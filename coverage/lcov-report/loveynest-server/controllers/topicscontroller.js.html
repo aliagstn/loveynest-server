@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">2.15% </span>
+                <span class="strong">2.08% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>2/93</span>
+                <span class='fraction'>2/96</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">2.24% </span>
+                <span class="strong">2.17% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>2/89</span>
+                <span class='fraction'>2/92</span>
             </div>
         
             
@@ -317,25 +317,27 @@
 <a name='L252'></a><a href='#L252'>252</a>
 <a name='L253'></a><a href='#L253'>253</a>
 <a name='L254'></a><a href='#L254'>254</a>
-<a name='L255'></a><a href='#L255'>255</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L255'></a><a href='#L255'>255</a>
+<a name='L256'></a><a href='#L256'>256</a>
+<a name='L257'></a><a href='#L257'>257</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -345,14 +347,16 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -570,43 +574,45 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">const { Topic, CoupleTopic, TopicCategory } = require("../models");
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">const { Topic, CoupleTopic, TopicCategory, sequelize } = require("../models");
 &nbsp;
 class TopicController {
 <span class="fstat-no" title="function not covered" >    st</span>atic async getAllTopics(req, res, next) {
+        const t = <span class="cstat-no" title="statement not covered" >await sequelize.transaction();</span>
 <span class="cstat-no" title="statement not covered" >        try {</span>
-            const coupleTopics = <span class="cstat-no" title="statement not covered" >await CoupleTopic.findAll({</span>
-                where: { CoupleId: req.user.CoupleId },
-            });
+            const coupleTopics = <span class="cstat-no" title="statement not covered" >await CoupleTopic.findAll(</span>
+                {
+                    where: { CoupleId: req.user.CoupleId },
+                },
+                { transaction: t }
+            );
 &nbsp;
             const coupleTopicsId = <span class="cstat-no" title="statement not covered" >coupleTopics.map(<span class="fstat-no" title="function not covered" >(c</span>oupleTopic) =&gt; <span class="cstat-no" title="statement not covered" >coupleTopic.TopicId)</span>;</span>
 &nbsp;
-            // console.log(coupleTopicsId);
-&nbsp;
-            const topics = <span class="cstat-no" title="statement not covered" >await Topic.findAll();</span>
+            const topics = <span class="cstat-no" title="statement not covered" >await Topic.findAll({ transaction: t });</span>
             const topicsId = <span class="cstat-no" title="statement not covered" >topics.map(<span class="fstat-no" title="function not covered" >(t</span>opic) =&gt; <span class="cstat-no" title="statement not covered" >topic.id)</span>;</span>
 &nbsp;
             let filteredTopics = <span class="cstat-no" title="statement not covered" >topicsId.filter(<span class="fstat-no" title="function not covered" >(t</span>opic) =&gt; <span class="cstat-no" title="statement not covered" >!coupleTopicsId.includes(topic))</span>;</span>
 &nbsp;
-            // console.log(filteredTopics);
-&nbsp;
             let threeTopics = <span class="cstat-no" title="statement not covered" >[];</span>
 <span class="cstat-no" title="statement not covered" >            for (let i = <span class="cstat-no" title="statement not covered" >0;</span> i &lt; 3; i++) {</span>
                 let random = <span class="cstat-no" title="statement not covered" >Math.floor(Math.random() * filteredTopics.length);</span>
-                // console.log(random, '&lt;&lt;&lt; random');
+&nbsp;
 <span class="cstat-no" title="statement not covered" >                threeTopics.push(filteredTopics[random]);</span>
 <span class="cstat-no" title="statement not covered" >                filteredTopics.splice(random, 1);</span>
             }
 &nbsp;
-            // console.log(threeTopics);
-&nbsp;
-            const threeRandomTopics = <span class="cstat-no" title="statement not covered" >await Topic.findAll({</span>
-                where: { id: threeTopics },
-            });
-&nbsp;
+            const threeRandomTopics = <span class="cstat-no" title="statement not covered" >await Topic.findAll(</span>
+                {
+                    where: { id: threeTopics },
+                },
+                { transaction: t }
+            );
+<span class="cstat-no" title="statement not covered" >            await t.commit();</span>
 <span class="cstat-no" title="statement not covered" >            res.status(200).json(threeRandomTopics);</span>
         } catch (err) {
+<span class="cstat-no" title="statement not covered" >            await t.rollback();</span>
 <span class="cstat-no" title="statement not covered" >            next(err);</span>
         }
     }
@@ -724,7 +730,7 @@ class TopicController {
                     TopicCategoryId,
                 },
                 {
-                    where: { id },
+                    where: { id: +id },
                 }
             );
 &nbsp;
@@ -743,8 +749,8 @@ class TopicController {
             const updatedCoupleTopic = <span class="cstat-no" title="statement not covered" >await CoupleTopic.update(</span>
                 {
                     status,
-                    TopicId,
-                    CoupleId,
+                    TopicId: +TopicId,
+                    CoupleId: +CoupleId,
                 },
                 {
                     where: { id },
@@ -767,7 +773,7 @@ class TopicController {
                     topicCategory,
                 },
                 {
-                    where: { id },
+                    where: { id: +id },
                 }
             );
 &nbsp;
@@ -782,7 +788,7 @@ class TopicController {
             const { id } = <span class="cstat-no" title="statement not covered" >req.params;</span>
 &nbsp;
             const deletedTopic = <span class="cstat-no" title="statement not covered" >await Topic.destroy({</span>
-                where: { id },
+                where: { id: +id },
             });
 &nbsp;
 <span class="cstat-no" title="statement not covered" >            res.status(200).json(deletedTopic);</span>
@@ -796,7 +802,7 @@ class TopicController {
             const { id } = <span class="cstat-no" title="statement not covered" >req.params;</span>
 &nbsp;
             const deletedCoupleTopic = <span class="cstat-no" title="statement not covered" >await CoupleTopic.destroy({</span>
-                where: { id },
+                where: { id: +id },
             });
 &nbsp;
 <span class="cstat-no" title="statement not covered" >            res.status(200).json({</span>
@@ -812,7 +818,7 @@ class TopicController {
             const { id } = <span class="cstat-no" title="statement not covered" >req.params;</span>
 &nbsp;
             const deletedCategory = <span class="cstat-no" title="statement not covered" >await TopicCategory.destroy({</span>
-                where: { id },
+                where: { id: +id },
             });
 &nbsp;
 <span class="cstat-no" title="statement not covered" >            res.status(200).json({</span>
@@ -832,7 +838,7 @@ module.exports = TopicController;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2022-07-19T07:38:46.420Z
+                at 2022-07-19T20:02:56.919Z
             </div>
         <script src="../../prettify.js"></script>
         <script>
