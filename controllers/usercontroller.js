@@ -155,12 +155,14 @@ class userController {
         const t = await sequelize.transaction();
         try {
             const { id } = req.params;
+            console.log(id)
             const { partnerCode } = req.body;
+            console.log(req.body)
             if (!partnerCode) {
                 throw { code: 400 };
             }
+            console.log(req.body)
             const user1 = await User.findByPk(id, { transaction: t });
-
             if (partnerCode === user1.userCode) {
                 throw { code: 400 };
             }

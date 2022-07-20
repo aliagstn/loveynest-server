@@ -39,21 +39,22 @@
             "valuePartner": null
         }
     ],
-    "QuizCategories": [
+    "QuizCategories":[
         {
-            "id": 1,
-            "quizCategory":"Sport",
-            "imgUrl": "https://www.freepnglogos.com/uploads/sport-png/sport-sports-management-asb-online-34.png"
+            "quizCategory":"Get To Know Me",
+            "imgUrl":"https://cdn.dribbble.com/users/1241550/screenshots/5292465/media/a5d94c41f1b656268671b6f3f89952c3.jpg?compress=1&resize=768x576&vertical=top"
         },
         {
-            "id": 2,
-            "quizCategory": "Kuliner",
-            "imgUrl": "https://th.bing.com/th/id/R.8557310eb125b18e3675617a75d0465a?rik=bsHtHSv8dQZRZQ&riu=http%3a%2f%2fclipart-library.com%2fimg%2f1002670.png&ehk=7usGJK15TApcyFVZEIuhPRvE4QSRc2L%2fuq%2fQHOLQWCg%3d&risl=&pid=ImgRaw&r=0"
+            "quizCategory":"Communication",
+            "imgUrl":"https://cdn.dribbble.com/users/3981342/screenshots/14969885/media/7128ce86aae84547030fd8bd23438079.png?compress=1&resize=768x576&vertical=top"
         },
         {
-            "id": 3,
-            "quizCategory": "Movies",
-            "imgUrl": "https://cdn1.vectorstock.com/i/1000x1000/11/55/flat-design-concept-cinema-icon-with-long-sh-vector-3311155.jpg"
+            "quizCategory":"Family and Friends",
+            "imgUrl":"https://cdn.dribbble.com/users/1152627/screenshots/10074323/media/c0f37fd3b53985cc0d093631078b7049.png?compress=1&resize=768x576&vertical=top"
+        },
+        {
+            "quizCategory":"Date Ideas",
+            "imgUrl":"https://cdn.dribbble.com/users/1117831/screenshots/14762981/media/8bb0c67975f3229d64f79d6ac7f9c30c.jpg?compress=1&resize=768x576&vertical=top"
         }
     ]
 }
