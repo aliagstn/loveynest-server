@@ -55,9 +55,9 @@ class userController {
             const payload = {
                 id: user.id,
             };
-
+            
             const access_token = convertPayloadToToken(payload);
-
+            console.log(access_token)
             res.status(200).json({
                 message: "User logged in successfully",
                 data: {

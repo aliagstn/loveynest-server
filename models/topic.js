@@ -9,6 +9,7 @@ module.exports = (sequelize, DataTypes) => {
          */
         static associate(models) {
             // define association here
+            Topic.belongsTo(models.TopicCategory, {foreignKey:"TopicCategoryId"})
         }
     }
     Topic.init(

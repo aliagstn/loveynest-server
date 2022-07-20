@@ -8,9 +8,9 @@ class TopicController {
                 {
                     where: { CoupleId: req.user.CoupleId },
                 },
-                { transaction: t }
+                // { transaction: t }
             );
-
+                console.log(coupleTopics)
             const coupleTopicsId = coupleTopics.map((coupleTopic) => coupleTopic.TopicId);
 
             const topics = await Topic.findAll({ transaction: t });
@@ -29,12 +29,15 @@ class TopicController {
             const threeRandomTopics = await Topic.findAll(
                 {
                     where: { id: threeTopics },
+                    include: TopicCategory
                 },
-                { transaction: t }
+                // { transaction: t },
             );
+            // console.log(threeRandomTopics)
             await t.commit();
             res.status(200).json(threeRandomTopics);
         } catch (err) {
+            console.log(err)
             await t.rollback();
             next(err);
         }
@@ -79,7 +82,7 @@ class TopicController {
         try {
             const { status, TopicId } = req.body;
             const { CoupleId } = req.user;
-
+            console.log(status, TopicId, CoupleId)
             const newCoupleTopic = await CoupleTopic.create({
                 status,
                 TopicId,

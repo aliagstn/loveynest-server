@@ -5,7 +5,7 @@ const userAuthentication = require("../middlewares/userAuthentication");
 
 routerTopics.get("/", userAuthentication, topicController.getAllTopics);
 
-routerTopics.post("/", topicController.addTopic);
+routerTopics.post("/", userAuthentication, topicController.addCoupleTopics);
 
 routerTopics.get("/:id", topicController.getTopicById);
 
