@@ -23,7 +23,7 @@ class AppQuizControl {
     try {
       const QuizId = 1;
       const { responseUser, UserId, CoupleId } = req.body;
-
+        console.log(req.body)
       const user = await User.findByPk(UserId, { transaction: t });
 
       if (!user) {

@@ -20,21 +20,18 @@ module.exports = (sequelize, DataTypes) => {
         {
             responseUser: {
                 allowNull: false,
-                type: DataTypes.ARRAY(DataTypes.BOOLEAN),
+                type: DataTypes.ARRAY(DataTypes.STRING),
                 validate: {
                     notEmpty: { msg: "responseUser cannot be empty" },
                     notNull: { msg: "responseUser cannot be empty" },
-                    customValidator(responseUser) {
-                        if (!responseUser) {
-                            throw { code: 400 };
-                        }
-                        if (Array.isArray(responseUser) === false) {
-                            throw { code: 400 };
-                        }
-                        if (responseUser.length !== 7) {
-                            throw { code: 400 };
-                        }
-                    },
+                    // customValidator(responseUser) {
+                    //     if (!responseUser) {
+                    //         throw { code: 400 };
+                    //     }
+                    //     if (responseUser.length !== 7) {
+                    //         throw { code: 400 };
+                    //     }
+                    // },
                 },
             },
             QuizId: DataTypes.INTEGER,

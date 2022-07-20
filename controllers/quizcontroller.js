@@ -64,7 +64,7 @@ class QuizController {
             let AuthorId = req.user.id; //? didapat dari authN
             AuthorId = +AuthorId;
             const user = await User.findByPk(+req.user.id, { transaction: t });
-            console.log(req.body, req.user)
+            
             const CoupleId = +user.CoupleId;
 
             if (!AuthorId || !CoupleId) {
@@ -314,7 +314,8 @@ class QuizController {
                     AuthorId: {
                         [Op.not]:+AuthorId
                     }
-                }
+                },
+                include: QuizCategory
             })
             console.log(allUserQuiz);
 
