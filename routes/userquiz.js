@@ -4,7 +4,8 @@ const userAuthentication = require("../middlewares/userauthentication");
 const authorization = require("../middlewares/authorization");
 router.get("/", QuizController.getQuiz);
 router.post("/", userAuthentication, QuizController.createQuiz);
-router.get("/quiz-done", QuizController.getAllUserQuizByCoupleIdDone);
+router.get("/myquiz", userAuthentication, QuizController.getAllUserQuizByUserId)
+router.get("/quiz-done", userAuthentication, QuizController.getAllUserQuizByCoupleIdDone);
 router.get("/quiz-notdone", userAuthentication, QuizController.getAllUserQuizByCoupleIdNotDone);
 router.patch("/:quizId/", QuizController.updateResponseQuiz);
 router.get("/:quizId", QuizController.getQuizById);

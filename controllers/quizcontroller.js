@@ -287,6 +287,7 @@ class QuizController {
     }
 
     //* GET ALL USER QUIZ BY COUPLE ID DONE
+    // question dari partner & status done
     static async getAllUserQuizByCoupleIdDone(req, res, next) {
         try {
             let AuthorId = req.user.id; //? didapat dari authN
@@ -309,7 +310,10 @@ class QuizController {
                 },
                 where: {
                     CoupleId,
-                    status: 'done'
+                    status: 'done',
+                    AuthorId: {
+                        [Op.not]:+AuthorId
+                    }
                 }
             })
             console.log(allUserQuiz);
@@ -326,6 +330,7 @@ class QuizController {
     static async getAllUserQuizByCoupleIdNotDone(req, res, next) {
         try {
             let AuthorId = req.user.id; //? didapat dari authN
+            console.log(AuthorId)
             AuthorId = +AuthorId;
             // let AuthorId = 3
             // const user = await User.findByPk(+req.user.id);
@@ -347,7 +352,36 @@ class QuizController {
                     CoupleId,
                     status: {
                         [Op.not]:'done'
+                    },
+                    AuthorId:{
+                        [Op.not]: AuthorId
                     }
+                },
+                include: QuizCategory
+            })
+            console.log(allUserQuiz);
+
+            res.status(200).json(allUserQuiz);
+
+        } catch (error) {
+            console.log(error);
+            next(error)
+        }
+    }
+
+    // questions PUNYA KITA
+    static async getAllUserQuizByUserId(req, res, next) {
+        try {
+            const {id, CoupleId} = req.user
+            
+            const allUserQuiz = await UserQuiz.findAll({
+                order: [["id", "ASC"]],
+                attributes: {
+                    exclude: ["createdAt", "updatedAt"],
+                },
+                where: {
+                    CoupleId:+CoupleId,
+                    AuthorId:+id
                 },
                 include: QuizCategory
             })
