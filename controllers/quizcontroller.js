@@ -111,10 +111,13 @@ class QuizController {
                 const questionObj = { question1, question2, question3, question4, question5 };
                 let question = [];
                 for (const key in questionObj) {
-                    questionObj[key].QuizId = userQuiz.id;
-                    question.push(questionObj[key]);
+                    if (Object.keys(questionObj[key]).length === 0) {
+                        delete obj[key];
+                    } else {
+                        questionObj[key].QuizId = userQuiz.id;
+                        question.push(questionObj[key]);
+                    }
                 }
-
                 const userQuestions = await UserQuestion.bulkCreate(question, { transaction: t });
 
                 await t.commit();
@@ -155,7 +158,6 @@ class QuizController {
                 throw { name: "QUIZ_DONE" };
             } else {
                 let { UserQuestions } = quiz;
-
                 if (answer1) {
                     let query = {
                         responsePartner: answer1,
