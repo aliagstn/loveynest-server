@@ -282,6 +282,78 @@ class QuizController {
         }
     }
 
+    //* GET ALL USER QUIZ BY COUPLE ID DONE
+    static async getAllUserQuizByCoupleIdDone(req, res, next) {
+        try {
+            let AuthorId = req.user.id; //? didapat dari authN
+            AuthorId = +AuthorId;
+            // let AuthorId = 3
+            // const user = await User.findByPk(+req.user.id);
+            const user = await User.findByPk(AuthorId);
+            // console.log(user, '<<<< USER');
+            // console.log(user.CoupleId, '<<<<');
+            const CoupleId = +user.CoupleId;
+
+            if (!AuthorId || !CoupleId) {
+                throw { code: 400 };
+            }
+
+            const allUserQuiz = await UserQuiz.findAll({
+                order: [["id", "ASC"]],
+                attributes: {
+                    exclude: ["createdAt", "updatedAt"],
+                },
+                where: {
+                    CoupleId,
+                    status: 'Done'
+                }
+            })
+            console.log(allUserQuiz);
+
+            res.status(200).json(allUserQuiz);
+
+        } catch (error) {
+            console.log(error);
+            next(error)
+        }
+    }
+
+    //* GET ALL USER QUIZ BY COUPLE ID NOT DONE
+    static async getAllUserQuizByCoupleIdNotDone(req, res, next) {
+        try {
+            let AuthorId = req.user.id; //? didapat dari authN
+            AuthorId = +AuthorId;
+            // let AuthorId = 3
+            // const user = await User.findByPk(+req.user.id);
+            const user = await User.findByPk(AuthorId);
+            // console.log(user, '<<<< USER');
+            // console.log(user.CoupleId, '<<<<');
+            const CoupleId = +user.CoupleId;
+
+            if (!AuthorId || !CoupleId) {
+                throw { code: 400 };
+            }
+
+            const allUserQuiz = await UserQuiz.findAll({
+                order: [["id", "ASC"]],
+                attributes: {
+                    exclude: ["createdAt", "updatedAt"],
+                },
+                where: {
+                    CoupleId,
+                    status: 'notDone'
+                }
+            })
+            console.log(allUserQuiz);
+
+            res.status(200).json(allUserQuiz);
+
+        } catch (error) {
+            console.log(error);
+            next(error)
+        }
+    }
+
     static async totalScore(req, res, next) {
         try {
             const { quizId: id } = req.params;

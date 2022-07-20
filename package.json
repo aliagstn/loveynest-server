@@ -20,6 +20,7 @@
     },
     "homepage": "https://github.com/aliagstn/loveynest-server#readme",
     "dependencies": {
+        "bcrypt": "^5.0.1",
         "bcryptjs": "^2.4.3",
         "cloudinary": "^1.30.0",
         "cors": "^2.8.5",
