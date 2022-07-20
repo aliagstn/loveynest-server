@@ -94,13 +94,11 @@ describe("Couple Routes Test", () => {
         test("200 - successful get", (done) => {
             request(app)
                 .get("/couples/3/3")
-                .set("access_token", user3token)
+                .set("access_token", token)
                 .then((res) => {
                     const { body, status } = res;
                     expect(status).toBe(200);
                     expect(body).toHaveProperty("id", expect.any(Number));
-                    expect(body).toHaveProperty("UserId1");
-                    expect(body).toHaveProperty("UserId2");
                     return done();
                 })
                 .catch((err) => {
