@@ -4,11 +4,10 @@ const { User } = require("../models");
 const userAuthentication = async (req, res, next) => {
     try {
         const { access_token } = req.headers;
-        console.log(access_token)
+        console.log(access_token);
         if (!access_token) {
             throw { name: "Invalid access token" };
         }
-
         const payload = convertTokenToPayload(access_token);
         const { id } = payload;
         const user = await User.findByPk(id);
@@ -20,7 +19,7 @@ const userAuthentication = async (req, res, next) => {
             nickname: user.nickname,
             email: user.email,
             CoupleId: user.CoupleId,
-            access_token
+            access_token,
         };
         next();
     } catch (err) {

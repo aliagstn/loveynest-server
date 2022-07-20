@@ -43,8 +43,32 @@ const quizInsert = {
         answer: "A",
     },
 };
+
+const quizInsert3question = {
+    quiz: {
+        title: "test title",
+        QuizCategoryId: "32",
+    },
+    question1: {
+        question: "test question 1 jawabannya A yah kah?",
+        optionA: "ini jawaban yang bener lho lho",
+        optionB: "ini jawban yang salahah",
+        answer: "A",
+    },
+    question2: {
+        question: "test question 2 jawabannya A yah?",
+        optionA: "ini jawaban yang bener lho",
+        optionB: "ini jawban yang salah",
+        answer: "A",
+    },
+    question3: {},
+    question4: {},
+    question5: {},
+};
 const token =
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiaWF0IjoxNjU4MjYwNjQxfQ.VyCq6K_eEXVpDVnYi32VdbURzsrLqjomCFkaSY9Avy0";
+const user3token =
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiaWF0IjoxNjU4MzA1NTk2fQ.8C7JYtws4UenRBa9Cxmkln3UwAck9W71wTPkqWDRud4";
 
 const answers = {
     answer1: "A",
@@ -162,7 +186,6 @@ describe("UserQuiz Routes Test", () => {
                     done(err);
                 });
         });
-
         //test no question
         test("400 no questions", (done) => {
             request(app)
@@ -430,6 +453,101 @@ describe("UserQuiz Routes Test", () => {
                 })
                 .catch((err) => {
                     return done(err);
+                });
+        });
+    });
+
+    describe("GET /userquiz/myquiz - get all quiz", () => {
+        test("200 - success on get all quiz", (done) => {
+            request(app)
+                .get("/userquiz/myquiz")
+                .set("access_token", user3token)
+                .then((res) => {
+                    const { body, status } = res;
+                    expect(status).toBe(200);
+                    return done();
+                })
+                .catch((err) => {
+                    done(err);
+                });
+        });
+        test("500 get all ISE test", (done) => {
+            jest.spyOn(UserQuiz, "findAll").mockRejectedValue("Error");
+            request(app)
+                .get("/userquiz/myquiz")
+                .set("access_token", user3token)
+                .then((res) => {
+                    const { body, status } = res;
+                    expect(status).toBe(500);
+                    expect(body).toHaveProperty("message", "Internal Server Error");
+                    return done();
+                })
+                .catch((err) => {
+                    done(err);
+                });
+        });
+    });
+    describe("GET /userquiz/quizdone - get all quiz", () => {
+        test("200 - success on get all quiz", (done) => {
+            request(app)
+                .get("/userquiz/quiz-done")
+                .set("access_token", user3token)
+                .then((res) => {
+                    const { body, status } = res;
+                    expect(status).toBe(200);
+                    expect(Array.isArray(body)).toBe(true);
+                    return done();
+                })
+                .catch((err) => {
+                    done(err);
+                });
+        });
+
+        test("500 get all ISE test", (done) => {
+            jest.spyOn(UserQuiz, "findAll").mockRejectedValue("Error");
+            request(app)
+                .get("/userquiz/quiz-done")
+                .set("access_token", user3token)
+                .then((res) => {
+                    const { body, status } = res;
+                    expect(status).toBe(500);
+                    expect(body).toHaveProperty("message", "Internal Server Error");
+                    return done();
+                })
+                .catch((err) => {
+                    done(err);
+                });
+        });
+    });
+    describe("GET /userquiz/quizdone - get all quiz", () => {
+        test("200 - success on get all quiz", (done) => {
+            request(app)
+                .get("/userquiz/quiz-notdone")
+                .set("access_token", user3token)
+                .then((res) => {
+                    const { body, status } = res;
+                    expect(status).toBe(200);
+                    expect(Array.isArray(body)).toBe(true);
+                    return done();
+                })
+                .catch((err) => {
+                    done(err);
+                });
+        });
+
+        test("500 get all ISE test", (done) => {
+            jest.spyOn(UserQuiz, "findAll").mockRejectedValue("Error");
+            request(app)
+                .get("/userquiz/quiz-notdone")
+                .set("access_token", user3token)
+                .then((res) => {
+                    const { body, status } = res;
+                    expect(status).toBe(500);
+                    expect(body).toHaveProperty("message", "Internal Server Error");
+                    return done();
+                })
+                .catch((err) => {
+                    done(err);
                 });
         });
     });

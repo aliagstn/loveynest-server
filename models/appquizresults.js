@@ -24,17 +24,6 @@ module.exports = (sequelize, DataTypes) => {
                 validate: {
                     notEmpty: { msg: "responseUser cannot be empty" },
                     notNull: { msg: "responseUser cannot be empty" },
-                    customValidator(responseUser) {
-                        if (!responseUser) {
-                            throw { code: 400 };
-                        }
-                        if (Array.isArray(responseUser) === false) {
-                            throw { code: 400 };
-                        }
-                        if (responseUser.length !== 7) {
-                            throw { code: 400 };
-                        }
-                    },
                 },
             },
             QuizId: DataTypes.INTEGER,

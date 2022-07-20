@@ -1,6 +1,7 @@
 const app = require("../app.js");
 const request = require("supertest");
 const { User, AppQuiz, AppQuizResult } = require("../models/index");
+const { convertPayloadToToken } = require("../helpers/jwt");
 
 const user1 = {
     email: "user.test@mail.com",
@@ -16,6 +17,7 @@ const token =
 
 const user5token =
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwiaWF0IjoxNjU4MjUwODYwfQ.lkC475z-VBZmLcdehxMPA82DDdWXAT56lltmdOI1duY";
+const wrongPayload = convertPayloadToToken({ id: 999 });
 
 describe("User Routes Test", () => {
     describe("POST /register - create new user", () => {
@@ -463,6 +465,21 @@ describe("User Routes Test", () => {
                 });
         });
 
+        test("400 - sus access_token", (done) => {
+            request(app)
+                .patch("/users/delete/1")
+                .set("access_token", wrongPayload)
+                .then((res) => {
+                    const { status, body } = res;
+                    expect(status).toBe(401);
+                    expect(body).toHaveProperty("message", "Invalid access token");
+                    return done();
+                })
+                .catch((err) => {
+                    done(err);
+                });
+        });
+
         test("400 - no couple", (done) => {
             request(app)
                 .patch("/users/delete/1")
@@ -495,11 +512,12 @@ describe("User Routes Test", () => {
     });
 
     describe("post /api/upload  - upload image", () => {
+        jest.spyOn(User, "findAll").mockResolvedValue("Benar");
+
         test.skip("201 - succesfull image upload", (done) => {
             request(app)
                 .post("/users/api/upload")
                 .set("access_token", token)
-                .attach("img", "./data/testingasset.png")
                 .then((res) => {
                     const { status, body } = res;
                     expect(status).toBe(201);
