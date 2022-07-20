@@ -13,6 +13,7 @@ class QuizController {
                     exclude: ["createdAt", "updatedAt"],
                 },
             });
+            console.log(quizes)
             res.status(200).json(quizes);
         } catch (error) {
             next(error);
@@ -62,7 +63,7 @@ class QuizController {
             let AuthorId = req.user.id; //? didapat dari authN
             AuthorId = +AuthorId;
             const user = await User.findByPk(+req.user.id, { transaction: t });
-
+            console.log(req.body, req.user)
             const CoupleId = +user.CoupleId;
 
             if (!AuthorId || !CoupleId) {
@@ -70,6 +71,7 @@ class QuizController {
             }
 
             const { question1, question2, question3, question4, question5, quiz } = req.body;
+            console.log(req.body, req.user)
             const { title, QuizCategoryId } = quiz;
             if (!question1 && !question2 && !question3 && !question4 && !question5) {
                 throw { code: 400 };
@@ -116,7 +118,7 @@ class QuizController {
                 // }
                 for (const key in questionObj) {
                     if (Object.keys(questionObj[key]).length === 0) {
-                        delete obj[key];
+                        delete questionObj[key];
                     } else {
                         questionObj[key].QuizId = userQuiz.id;
                         question.push(questionObj[key]);
@@ -124,7 +126,7 @@ class QuizController {
                 }
 
                 const userQuestions = await UserQuestion.bulkCreate(question, { transaction: t });
-
+                console.log(userQuestions)
                 await t.commit();
 
                 res.status(201).json({
@@ -133,6 +135,7 @@ class QuizController {
                 });
             }
         } catch (error) {
+            console.log(error)
             t.rollback();
             next(error);
         }
