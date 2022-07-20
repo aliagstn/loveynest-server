@@ -7,6 +7,8 @@ beforeEach(() => {
 });
 const token =
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNjU4MjQ4MjE2fQ.bIzM9ZHbDgjlocFMYJITQ_2nL7qVe8yl1x0WI-IH-S4";
+const user3token =
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiaWF0IjoxNjU4MzA1NTk2fQ.8C7JYtws4UenRBa9Cxmkln3UwAck9W71wTPkqWDRud4";
 
 describe("Couple Routes Test", () => {
     describe("GET /couples/ - get all couple", () => {
@@ -48,6 +50,20 @@ describe("Couple Routes Test", () => {
     });
 
     describe("GET /couples/id - get couple by id", () => {
+        test("404 - wrong couple id on get one couple", (done) => {
+            request(app)
+                .get("/couples/555")
+                .set("access_token", token)
+                .then((res) => {
+                    const { body, status } = res;
+                    expect(status).toBe(404);
+                    expect(body).toHaveProperty("message", "Not Found");
+                    return done();
+                })
+                .catch((err) => {
+                    done(err);
+                });
+        });
         test("200 - success on get one couple", (done) => {
             request(app)
                 .get("/couples/1")
@@ -74,19 +90,55 @@ describe("Couple Routes Test", () => {
                 });
         });
     });
+    describe("GET /couples/:coupleId/:id - get couple by coupleid", () => {
+        test("200 - successful get", (done) => {
+            request(app)
+                .get("/couples/3/3")
+                .set("access_token", user3token)
+                .then((res) => {
+                    const { body, status } = res;
+                    expect(status).toBe(200);
+                    expect(body).toHaveProperty("id", expect.any(Number));
+                    expect(body).toHaveProperty("UserId1");
+                    expect(body).toHaveProperty("UserId2");
+                    return done();
+                })
+                .catch((err) => {
+                    console.log(err);
+                    done();
+                });
+        });
+        test("404 - no user", (done) => {
+            request(app)
+                .get("/couples/8/9")
+                .set("access_token", user3token)
+                .then((res) => {
+                    const { body, status } = res;
+                    expect(status).ToBe(404);
+                    expect(body).toHaveProperty("message", "Not Found");
+                    return done();
+                })
+                .catch((err) => {
+                    console.log(err);
+                    done();
+                });
+        });
 
-    test("404 - wrong couple id on get one couple", (done) => {
-        request(app)
-            .get("/couples/555")
-            .set("access_token", token)
-            .then((res) => {
-                const { body, status } = res;
-                expect(status).toBe(404);
-                expect(body).toHaveProperty("message", "Not Found");
-                return done();
-            })
-            .catch((err) => {
-                done(err);
-            });
+        test("500 - somehow Error", (done) => {
+            jest.spyOn(Couple, "findAll").mockRejectedValue("Error");
+            request(app)
+                .get("/couples/3/3")
+                .set("access_token", user3token)
+                .then((res) => {
+                    const { body, status } = res;
+                    expect(status).ToBe(500);
+                    expect(body).toHaveProperty("message", "Internal Server Error");
+                    return done();
+                })
+                .catch((err) => {
+                    console.log(err);
+                    done();
+                });
+        });
     });
 });

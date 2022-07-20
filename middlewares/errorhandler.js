@@ -17,15 +17,9 @@ const errorHandler = (err, req, res, next) => {
     } else if (name === "Invalid access token") {
         code = 401;
         message = name;
-    } else if (name === "EMPTY_INPUT") {
-        code = 400;
-        message = "Field Can Not be Empty";
     } else if (name === "QUIZ_ALLREADY_EXIST") {
         code = 400;
         message = "This Quiz already exist";
-    } else if (name === "QUESTION_ALLREADY_EXIST") {
-        code = 400;
-        message = "This Question already exist";
     } else if (name === "QUIZ_DONE") {
         code = 400;
         message = "This Quiz already done";
@@ -53,6 +47,7 @@ const errorHandler = (err, req, res, next) => {
         message = "Internal Server Error";
     }
 
+    console.log(err, "<--");
     res.status(code).json({
         statusCode: code,
         message: message,

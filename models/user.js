@@ -67,19 +67,18 @@ module.exports = (sequelize, DataTypes) => {
                         instance.userCode;
                         let random;
                         do {
-                            random = Math.floor(Math.random() * Math.pow(10, 4));
+                            random = Math.floor(Math.random() * 10000);
                         } while (usersCode.indexOf(instance.userCode) !== -1);
                         random = random.toString();
-                        if (random.length === 3) {
-                            random = "0" + random;
-                        } else if (random.length === 2) {
-                            random = "00" + random;
-                        } else if (random.length === 1) {
-                            random = "000" + random;
-                        }
+                        // if (random.length === 3) {
+                        //     random = "0" + random;
+                        // } else if (random.length === 2) {
+                        //     random = "00" + random;
+                        // } else if (random.length === 1) {
+                        //     random = "000" + random;
+                        // }
                         instance.userCode = `LV-${random}`;
-                    } catch (err) {
-                        console.log(err);
+                    } finally {
                     }
                 },
             },

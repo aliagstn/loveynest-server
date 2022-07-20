@@ -57,6 +57,7 @@ class userController {
             };
 
             const access_token = convertPayloadToToken(payload);
+
             res.status(200).json({
                 message: "User logged in successfully",
                 data: {
@@ -155,14 +156,12 @@ class userController {
         const t = await sequelize.transaction();
         try {
             const { id } = req.params;
-            console.log(id)
             const { partnerCode } = req.body;
-            console.log(req.body)
             if (!partnerCode) {
                 throw { code: 400 };
             }
-            console.log(req.body)
             const user1 = await User.findByPk(id, { transaction: t });
+
             if (partnerCode === user1.userCode) {
                 throw { code: 400 };
             }

@@ -1,6 +1,7 @@
 const app = require("../app.js");
 const request = require("supertest");
 const { User, AppQuiz, AppQuizResult } = require("../models/index");
+
 let answer = {
     responseUser: [true, false, true, true, true, false, false],
     UserId: 1,
@@ -213,47 +214,7 @@ describe("AppQuiz Routes Test", () => {
                 });
         });
         // test response less than 7
-        test("400 - response insufficient / sequelize error less than 7", (done) => {
-            request(app)
-                .post("/appquiz/result/")
-                .set("access_token", token)
-                .send({
-                    responseUser: [true, false, true, true, true, false],
-                    UserId: 1,
-                    QuizId: 1,
-                    CoupleId: 1,
-                })
-                .then((res) => {
-                    const { body, status } = res;
-                    expect(status).toBe(400);
-                    expect(body).toHaveProperty("message");
-                    return done();
-                })
-                .catch((err) => {
-                    done(err);
-                });
-        });
-        // test response more than 7
-        test("400 - response insufficient / sequelize error", (done) => {
-            request(app)
-                .post("/appquiz/result/")
-                .set("access_token", token)
-                .send({
-                    responseUser: [true, false, true, true, true, false, false, true],
-                    UserId: 1,
-                    QuizId: 1,
-                    CoupleId: 1,
-                })
-                .then((res) => {
-                    const { body, status } = res;
-                    expect(status).toBe(400);
-                    expect(body).toHaveProperty("message");
-                    return done();
-                })
-                .catch((err) => {
-                    done(err);
-                });
-        });
+
         // test no user id
         test("404 - cannot find user (no user)", (done) => {
             request(app)

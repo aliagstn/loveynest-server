@@ -1,8 +1,7 @@
 "use strict";
 
-const { query } = require("express");
 const { User, UserQuiz, UserQuestion, QuizCategory, sequelize } = require("../models");
-const {Op} = require("sequelize")
+const { Op } = require("sequelize");
 
 class QuizController {
     //* READ ALL QUIZ (/quizes)
@@ -14,7 +13,7 @@ class QuizController {
                     exclude: ["createdAt", "updatedAt"],
                 },
             });
-            console.log(quizes)
+            console.log(quizes);
             res.status(200).json(quizes);
         } catch (error) {
             next(error);
@@ -63,20 +62,12 @@ class QuizController {
         try {
             let AuthorId = req.user.id;
             AuthorId = +AuthorId;
-<<<<<<< HEAD
-            let CoupleId = req.user.CoupleId;
-=======
             const user = await User.findByPk(+req.user.id, { transaction: t });
-            console.log(req.body, req.user)
+            console.log(req.body, req.user);
             const CoupleId = +user.CoupleId;
 
-            if (!AuthorId || !CoupleId) {
-                throw { code: 400 };
-            }
->>>>>>> a1918b5447f7ca0e37031fa5e87aa58f0e4f52f3
-
             const { question1, question2, question3, question4, question5, quiz } = req.body;
-            console.log(req.body, req.user)
+            console.log(req.body, req.user);
             const { title, QuizCategoryId } = quiz;
             if (!question1 && !question2 && !question3 && !question4 && !question5) {
                 throw { code: 400 };
@@ -127,7 +118,7 @@ class QuizController {
                     }
                 }
                 const userQuestions = await UserQuestion.bulkCreate(question, { transaction: t });
-                console.log(userQuestions)
+
                 await t.commit();
 
                 res.status(201).json({
@@ -136,7 +127,7 @@ class QuizController {
                 });
             }
         } catch (error) {
-            console.log(error)
+            console.log(error);
             t.rollback();
             next(error);
         }
@@ -289,18 +280,10 @@ class QuizController {
     // question dari partner & status done
     static async getAllUserQuizByCoupleIdDone(req, res, next) {
         try {
-            let AuthorId = req.user.id; //? didapat dari authN
+            let AuthorId = req.user.id;
             AuthorId = +AuthorId;
-            // let AuthorId = 3
-            // const user = await User.findByPk(+req.user.id);
             const user = await User.findByPk(AuthorId);
-            // console.log(user, '<<<< USER');
-            // console.log(user.CoupleId, '<<<<');
             const CoupleId = +user.CoupleId;
-
-            if (!AuthorId || !CoupleId) {
-                throw { code: 400 };
-            }
 
             const allUserQuiz = await UserQuiz.findAll({
                 order: [["id", "ASC"]],
@@ -309,19 +292,15 @@ class QuizController {
                 },
                 where: {
                     CoupleId,
-                    status: 'done',
+                    status: "done",
                     AuthorId: {
-                        [Op.not]:+AuthorId
-                    }
-                }
-            })
-            console.log(allUserQuiz);
-
+                        [Op.not]: +AuthorId,
+                    },
+                },
+            });
             res.status(200).json(allUserQuiz);
-
         } catch (error) {
-            console.log(error);
-            next(error)
+            next(error);
         }
     }
 
@@ -329,7 +308,6 @@ class QuizController {
     static async getAllUserQuizByCoupleIdNotDone(req, res, next) {
         try {
             let AuthorId = req.user.id; //? didapat dari authN
-            console.log(AuthorId)
             AuthorId = +AuthorId;
             // let AuthorId = 3
             // const user = await User.findByPk(+req.user.id);
@@ -337,11 +315,6 @@ class QuizController {
             // console.log(user, '<<<< USER');
             // console.log(user.CoupleId, '<<<<');
             const CoupleId = +user.CoupleId;
-
-            if (!AuthorId || !CoupleId) {
-                throw { code: 400 };
-            }
-
             const allUserQuiz = await UserQuiz.findAll({
                 order: [["id", "ASC"]],
                 attributes: {
@@ -350,47 +323,41 @@ class QuizController {
                 where: {
                     CoupleId,
                     status: {
-                        [Op.not]:'done'
+                        [Op.not]: "done",
                     },
-                    AuthorId:{
-                        [Op.not]: AuthorId
-                    }
+                    AuthorId: {
+                        [Op.not]: AuthorId,
+                    },
                 },
-                include: QuizCategory
-            })
-            console.log(allUserQuiz);
+                include: QuizCategory,
+            });
 
             res.status(200).json(allUserQuiz);
-
         } catch (error) {
-            console.log(error);
-            next(error)
+            next(error);
         }
     }
 
     // questions PUNYA KITA
     static async getAllUserQuizByUserId(req, res, next) {
         try {
-            const {id, CoupleId} = req.user
-            
+            const { id, CoupleId } = req.user;
+
             const allUserQuiz = await UserQuiz.findAll({
                 order: [["id", "ASC"]],
                 attributes: {
                     exclude: ["createdAt", "updatedAt"],
                 },
                 where: {
-                    CoupleId:+CoupleId,
-                    AuthorId:+id
+                    CoupleId: +CoupleId,
+                    AuthorId: +id,
                 },
-                include: QuizCategory
-            })
-            console.log(allUserQuiz);
+                include: QuizCategory,
+            });
 
             res.status(200).json(allUserQuiz);
-
         } catch (error) {
-            console.log(error);
-            next(error)
+            next(error);
         }
     }
 

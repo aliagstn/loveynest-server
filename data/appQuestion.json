@@ -1,15 +1,15 @@
 [
-  {
-    "title": "Weekly Couples Quiz",
-    "questions": [
-      "I felt heard by my partner this week",
-      "I'm satisfied with how we resolved disagreements this week",
-      "We actively made time for laughter and excitement this week",
-      "My partner supported me in my personal growth this week",
-      "We were aligned on how we spent money this week",
-      "We made time for emotional intimacy this week",
-      "I felt safe to be my authentic self around my partner this week",
-      "My partner got along well with my family or friends this week"
-    ]
-  }
+    {
+        "title": "Weekly Couples Quiz",
+        "question": [
+            "I felt heard by my partner this week",
+            "I'm satisfied with how we resolved disagreements this week",
+            "We actively made time for laughter and excitement this week",
+            "My partner supported me in my personal growth this week",
+            "We were aligned on how we spent money this week",
+            "We made time for emotional intimacy this week",
+            "I felt safe to be my authentic self around my partner this week",
+            "My partner got along well with my family or friends this week"
+        ]
+    }
 ]
