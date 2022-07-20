@@ -82,7 +82,7 @@ class TopicController {
         try {
             const { status, TopicId } = req.body;
             const { CoupleId } = req.user;
-
+            console.log(status, TopicId, CoupleId)
             const newCoupleTopic = await CoupleTopic.create({
                 status,
                 TopicId,
