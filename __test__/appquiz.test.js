@@ -9,6 +9,8 @@ let answer = {
 };
 const token =
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiaWF0IjoxNjU4MjU5ODg4fQ.a9Yau-UeroN31c1PmYJULZE_FNQBMKYjwDlebGbPo7E";
+const user3token =
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiaWF0IjoxNjU4MzA1NTk2fQ.8C7JYtws4UenRBa9Cxmkln3UwAck9W71wTPkqWDRud4";
 
 beforeEach(() => {
     jest.restoreAllMocks();
@@ -92,8 +94,8 @@ describe("AppQuiz Routes Test", () => {
     describe("GET /result/:id - get one result based on user Id", () => {
         test("200 - success on get one result", (done) => {
             request(app)
-                .get("/appquiz/result/1")
-                .set("access_token", token)
+                .get("/appquiz/result/3")
+                .set("access_token", user3token)
                 .then((res) => {
                     const { body, status } = res;
                     expect(status).toBe(200);

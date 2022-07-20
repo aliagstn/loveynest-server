@@ -59,11 +59,9 @@ class QuizController {
         const t = await sequelize.transaction();
 
         try {
-            let AuthorId = req.user.id; //? didapat dari authN
+            let AuthorId = req.user.id;
             AuthorId = +AuthorId;
-            const user = await User.findByPk(+req.user.id, { transaction: t });
-
-            const CoupleId = +user.CoupleId;
+            let CoupleId = req.user.CoupleId;
 
             if (!AuthorId || !CoupleId) {
                 throw { code: 400 };

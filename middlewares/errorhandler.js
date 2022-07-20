@@ -53,7 +53,6 @@ const errorHandler = (err, req, res, next) => {
         message = "Internal Server Error";
     }
 
-    console.log(err);
     res.status(code).json({
         statusCode: code,
         message: message,

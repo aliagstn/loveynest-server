@@ -7,10 +7,4 @@ routerTopics.get("/", userAuthentication, topicController.getAllTopics);
 
 routerTopics.post("/", userAuthentication, topicController.addCoupleTopics);
 
-routerTopics.get("/:id", topicController.getTopicById);
-
-routerTopics.put("/:id", topicController.updateTopic);
-
-routerTopics.delete("/:id", topicController.deleteTopic);
-
 module.exports = routerTopics;
