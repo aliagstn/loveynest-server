@@ -7,8 +7,8 @@ class TopicController {
             const coupleTopics = await CoupleTopic.findAll(
                 {
                     where: { CoupleId: req.user.CoupleId },
-                }
-                // { transaction: t }
+                },
+                { transaction: t }
             );
             const coupleTopicsId = coupleTopics.map((coupleTopic) => coupleTopic.TopicId);
 
@@ -26,14 +26,13 @@ class TopicController {
                 {
                     where: { id: threeTopics },
                     include: TopicCategory,
-                }
-                // { transaction: t }
+                },
+                { transaction: t }
             );
 
             await t.commit();
             res.status(200).json(threeRandomTopics);
         } catch (err) {
-            console.log(err);
             await t.rollback();
             next(err);
         }
@@ -42,8 +41,7 @@ class TopicController {
     static async addCoupleTopics(req, res, next) {
         try {
             const { status, TopicId } = req.body;
-
-            if (status !== true) {
+            if (status !== "true" || !status) {
                 throw { code: 400 };
             }
             const { CoupleId } = req.user;
@@ -52,7 +50,6 @@ class TopicController {
                 TopicId,
                 CoupleId,
             });
-
             res.status(201).json(newCoupleTopic);
         } catch (err) {
             next(err);

@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">71.87% </span>
+                <span class="strong">96.77% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>23/32</span>
+                <span class='fraction'>30/31</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/2</span>
+                <span class='fraction'>4/4</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">60% </span>
+                <span class="strong">80% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>3/5</span>
+                <span class='fraction'>4/5</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">71.42% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>20/28</span>
+                <span class='fraction'>27/27</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line medium'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -122,10 +122,7 @@
 <a name='L57'></a><a href='#L57'>57</a>
 <a name='L58'></a><a href='#L58'>58</a>
 <a name='L59'></a><a href='#L59'>59</a>
-<a name='L60'></a><a href='#L60'>60</a>
-<a name='L61'></a><a href='#L61'>61</a>
-<a name='L62'></a><a href='#L62'>62</a>
-<a name='L63'></a><a href='#L63'>63</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">5x</span>
+<a name='L60'></a><a href='#L60'>60</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -162,31 +159,28 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">const { Topic, CoupleTopic, TopicCategory, sequelize } = require("../models");
 &nbsp;
 class TopicController {
@@ -196,8 +190,8 @@ class TopicController {
             const coupleTopics = await CoupleTopic.findAll(
                 {
                     where: { CoupleId: req.user.CoupleId },
-                }
-                // { transaction: t }
+                },
+                { transaction: t }
             );
             const coupleTopicsId = coupleTopics.map(<span class="fstat-no" title="function not covered" >(c</span>oupleTopic) =&gt; <span class="cstat-no" title="statement not covered" >coupleTopic.TopicId)</span>;
 &nbsp;
@@ -215,36 +209,33 @@ class TopicController {
                 {
                     where: { id: threeTopics },
                     include: TopicCategory,
-                }
-                // { transaction: t }
+                },
+                { transaction: t }
             );
 &nbsp;
             await t.commit();
             res.status(200).json(threeRandomTopics);
         } catch (err) {
-            console.log(err);
             await t.rollback();
             next(err);
         }
     }
 &nbsp;
-<span class="fstat-no" title="function not covered" >    st</span>atic async addCoupleTopics(req, res, next) {
-<span class="cstat-no" title="statement not covered" >        try {</span>
-            const { status, TopicId } = <span class="cstat-no" title="statement not covered" >req.body;</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >            if (status !== true) {</span>
-<span class="cstat-no" title="statement not covered" >                throw { code: 400 };</span>
+    static async addCoupleTopics(req, res, next) {
+        try {
+            const { status, TopicId } = req.body;
+            if (status !== "true" || !status) {
+                throw { code: 400 };
             }
-            const { CoupleId } = <span class="cstat-no" title="statement not covered" >req.user;</span>
-            const newCoupleTopic = <span class="cstat-no" title="statement not covered" >await CoupleTopic.create({</span>
+            const { CoupleId } = req.user;
+            const newCoupleTopic = await CoupleTopic.create({
                 status,
                 TopicId,
                 CoupleId,
             });
-&nbsp;
-<span class="cstat-no" title="statement not covered" >            res.status(201).json(newCoupleTopic);</span>
+            res.status(201).json(newCoupleTopic);
         } catch (err) {
-<span class="cstat-no" title="statement not covered" >            next(err);</span>
+            next(err);
         }
     }
 }
@@ -256,7 +247,7 @@ module.exports = TopicController;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2022-07-20T08:39:52.994Z
+                at 2022-07-20T12:42:20.786Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

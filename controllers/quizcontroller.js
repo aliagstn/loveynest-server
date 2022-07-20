@@ -63,10 +63,6 @@ class QuizController {
             AuthorId = +AuthorId;
             let CoupleId = req.user.CoupleId;
 
-            if (!AuthorId || !CoupleId) {
-                throw { code: 400 };
-            }
-
             const { question1, question2, question3, question4, question5, quiz } = req.body;
             const { title, QuizCategoryId } = quiz;
             if (!question1 && !question2 && !question3 && !question4 && !question5) {
@@ -108,10 +104,7 @@ class QuizController {
                 //* Create User Questions
                 const questionObj = { question1, question2, question3, question4, question5 };
                 let question = [];
-                // for (const key in questionObj) {
-                //     questionObj[key].QuizId = userQuiz.id;
-                //     question.push(questionObj[key]);
-                // }
+
                 for (const key in questionObj) {
                     if (Object.keys(questionObj[key]).length === 0) {
                         delete obj[key];
