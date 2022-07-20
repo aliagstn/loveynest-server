@@ -2,6 +2,7 @@
 
 const { query } = require("express");
 const { User, UserQuiz, UserQuestion, QuizCategory, sequelize } = require("../models");
+const {Op} = require("sequelize")
 
 class QuizController {
     //* READ ALL QUIZ (/quizes)
@@ -308,7 +309,7 @@ class QuizController {
                 },
                 where: {
                     CoupleId,
-                    status: 'Done'
+                    status: 'done'
                 }
             })
             console.log(allUserQuiz);
@@ -344,8 +345,11 @@ class QuizController {
                 },
                 where: {
                     CoupleId,
-                    status: 'notDone'
-                }
+                    status: {
+                        [Op.not]:'done'
+                    }
+                },
+                include: QuizCategory
             })
             console.log(allUserQuiz);
 
