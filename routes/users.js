@@ -1,6 +1,6 @@
 const router = require("express").Router();
 const userController = require("../controllers/usercontroller");
-const userAuth = require("../middlewares/userAuth");
+const userAuth = require("../seeding-copy/userAuth");
 const authorization = require("../middlewares/authorization");
 
 router.post("/api/upload", userController.postToCloudinary);
