@@ -1,23 +1,28 @@
 {
-    "development": {
-        "username": "postgres",
-        "password": "postgres",
-        "database": "loveynest",
-        "host": "127.0.0.1",
-        "dialect": "postgres"
-    },
-    "test": {
-        "username": "postgres",
-        "password": "postgres",
-        "database": "loveynest_test",
-        "host": "127.0.0.1",
-        "dialect": "postgres"
-    },
-    "production": {
-        "username": "root",
-        "password": null,
-        "database": "database_production",
-        "host": "127.0.0.1",
-        "dialect": "mysql"
+  "development": {
+    "username": "postgres",
+    "password": "nurma123",
+    "database": "loveynest-db",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
+  },
+  "test": {
+    "username": "postgres",
+    "password": "postgres",
+    "database": "loveynest_test",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
+  },
+  "production": {
+    "use_env_variable": "DATABASE_URL",
+    "ssl": true,
+    "dialect": "postgres",
+    "protocol": "postgres",
+    "dialectOptions": {
+      "ssl": {
+        "require": true,
+        "rejectUnauthorized": false
+      }
     }
+  }
 }
