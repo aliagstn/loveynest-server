@@ -1,7 +1,7 @@
 "use strict";
 const { convertTokenToPayload } = require("../helpers/jwt");
 const { User } = require("../models");
-const userauthentication = async (req, res, next) => {
+const userAuth = async (req, res, next) => {
     try {
         const { access_token } = req.headers;
         console.log(access_token)
@@ -27,4 +27,4 @@ const userauthentication = async (req, res, next) => {
         next(err);
     }
 };
-module.exports = userauthentication;
+module.exports = userAuth;

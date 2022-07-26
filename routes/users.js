@@ -1,6 +1,6 @@
 const router = require("express").Router();
 const userController = require("../controllers/usercontroller");
-const userauthentication = require("../middlewares/userauthentication");
+const userAuth = require("../middlewares/userAuth");
 const authorization = require("../middlewares/authorization");
 
 router.post("/api/upload", userController.postToCloudinary);
@@ -13,7 +13,7 @@ router.get("/", userController.getAllUsers);
 
 router.get("/:id", userController.getUserById);
 
-router.use(userauthentication);
+router.use(userAuth);
 router.use(authorization);
 
 router.patch("/:id", userController.updateUser);
