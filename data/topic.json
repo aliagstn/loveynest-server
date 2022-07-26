@@ -37,10 +37,6 @@
             "TopicCategoryId": 3
         },
         {
-            "name": "Which one of these objects reminds you most of me: An umbrella, light bulb, cell phone, loaf of bread, or pencil. Why?",
-            "TopicCategoryId": 1
-        },
-        {
             "name": "What goals do you have for our relationship?",
             "TopicCategoryId": 3
         },
