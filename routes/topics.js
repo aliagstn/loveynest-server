@@ -1,11 +1,11 @@
 const express = require("express");
 const routerTopics = express.Router();
 const topicController = require("../controllers/topicscontroller");
-const userAuthentication = require("../middlewares/userAuthentication");
+const userAuth = require("../middlewares/userAuth");
 
-routerTopics.get("/", userAuthentication, topicController.getAllTopics);
+routerTopics.get("/", userAuth, topicController.getAllTopics);
 
-routerTopics.post("/", userAuthentication, topicController.addCoupleTopics);
+routerTopics.post("/", userAuth, topicController.addCoupleTopics);
 
 // routerTopics.get("/:id", topicController.getTopicById);
 
