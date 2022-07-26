@@ -1,9 +1,9 @@
 const router = require("express").Router();
 const CoupleController = require("../controllers/couplecontroller");
-const userAuthentication = require("../middlewares/userauthentication");
+const userAuth = require("../middlewares/userAuth");
 const authorization = require("../middlewares/authorization");
 
-router.use(userAuthentication);
+router.use(userAuth);
 router.get("/", CoupleController.getAllCouples);
 router.get("/:id/:UserId", CoupleController.findMyPartner)
 router.use(authorization);
