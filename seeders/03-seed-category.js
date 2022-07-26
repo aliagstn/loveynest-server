@@ -3,7 +3,7 @@
 module.exports = {
   async up(queryInterface, Sequelize) {
 
-    const categories = require('../Data/data-dummy-userquiz.json').QuizCategories
+    const categories = require('../data/data-dummy-userquiz.json').QuizCategories
     categories.forEach(category => {
       delete category.id
       category.createdAt = new Date()
